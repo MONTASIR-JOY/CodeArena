@@ -51,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
             switchTab(R.id.navigation_home);
         }
 
-        // Trigger background solve sync on app open
-        SyncRepository.getInstance(this).syncCodeforcesSolves(null);
+        // Trigger background solve sync on app open & schedule daily sync
+        SyncRepository.getInstance(this).syncAllPlatformsDirectly();
+        com.kuet.codearena.util.AlarmScheduler.scheduleDailySyncAlarm(this);
     }
 
     private boolean switchTab(int tabId) {
@@ -100,3 +101,4 @@ public class MainActivity extends AppCompatActivity {
         outState.putInt(KEY_SELECTED_TAB, currentTabId);
     }
 }
+

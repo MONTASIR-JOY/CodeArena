@@ -106,3 +106,4 @@ public class AtCoderPlatformSource implements PlatformSource {
         return solves;
     }
 }
+

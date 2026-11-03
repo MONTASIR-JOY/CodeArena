@@ -88,3 +88,4 @@ public class CodeforcesPlatformSource implements PlatformSource {
         return solves;
     }
 }
+

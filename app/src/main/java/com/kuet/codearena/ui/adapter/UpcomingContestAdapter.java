@@ -114,3 +114,4 @@ public class UpcomingContestAdapter extends ListAdapter<ContestEntity, UpcomingC
         }
     }
 }
+

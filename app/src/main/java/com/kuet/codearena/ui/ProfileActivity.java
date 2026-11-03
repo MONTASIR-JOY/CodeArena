@@ -72,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.btnVerifyAtCoder.setOnClickListener(v -> {
             String handle = binding.etAtCoderHandle.getText() != null ? binding.etAtCoderHandle.getText().toString().trim() : "";
             if (!handle.isEmpty()) {
-                Toast.makeText(this, "AtCoder handle @" + handle + " verified!", Toast.LENGTH_SHORT).show();
+                verifyAtCoderHandle(handle);
             } else {
                 binding.etAtCoderHandle.setError("Enter AtCoder username");
             }
@@ -81,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.btnVerifyLeetCode.setOnClickListener(v -> {
             String handle = binding.etLeetCodeHandle.getText() != null ? binding.etLeetCodeHandle.getText().toString().trim() : "";
             if (!handle.isEmpty()) {
-                Toast.makeText(this, "LeetCode handle @" + handle + " verified!", Toast.LENGTH_SHORT).show();
+                verifyLeetCodeHandle(handle);
             } else {
                 binding.etLeetCodeHandle.setError("Enter LeetCode username");
             }
@@ -145,4 +145,47 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void verifyAtCoderHandle(String handle) {
+        binding.btnVerifyAtCoder.setEnabled(false);
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                com.kuet.codearena.data.remote.AtCoderPlatformSource source = new com.kuet.codearena.data.remote.AtCoderPlatformSource();
+                List<com.kuet.codearena.data.db.entity.SolveEntity> list = source.fetchUserAcceptedSubmissions(handle);
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    binding.btnVerifyAtCoder.setEnabled(true);
+                    Snackbar.make(binding.profileCoordinator,
+                            "Verified AtCoder @" + handle + " (" + list.size() + " AC submissions found)",
+                            Snackbar.LENGTH_SHORT).show();
+                });
+            } catch (Exception e) {
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    binding.btnVerifyAtCoder.setEnabled(true);
+                    Snackbar.make(binding.profileCoordinator, "AtCoder verify failed: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
+    private void verifyLeetCodeHandle(String handle) {
+        binding.btnVerifyLeetCode.setEnabled(false);
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                com.kuet.codearena.data.remote.LeetCodePlatformSource source = new com.kuet.codearena.data.remote.LeetCodePlatformSource();
+                List<com.kuet.codearena.data.db.entity.SolveEntity> list = source.fetchUserAcceptedSubmissions(handle);
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    binding.btnVerifyLeetCode.setEnabled(true);
+                    Snackbar.make(binding.profileCoordinator,
+                            "Verified LeetCode @" + handle + " (" + list.size() + " recent AC submissions found)",
+                            Snackbar.LENGTH_SHORT).show();
+                });
+            } catch (Exception e) {
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    binding.btnVerifyLeetCode.setEnabled(true);
+                    Snackbar.make(binding.profileCoordinator, "LeetCode verify failed: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
 }
+

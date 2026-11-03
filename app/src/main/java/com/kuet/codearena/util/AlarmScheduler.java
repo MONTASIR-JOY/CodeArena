@@ -40,6 +40,13 @@ public class AlarmScheduler {
         }
     }
 
+    public static void scheduleDailySyncAlarm(Context context) {
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.setAction(AlarmReceiver.ACTION_DAILY_SYNC);
+        long triggerAtMillis = System.currentTimeMillis() + (24L * 60L * 60L * 1000L);
+        scheduleExactAlarm(context, triggerAtMillis, intent, 9999);
+    }
+
     public static void cancelAlarm(Context context, Intent intent, int requestCode) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) return;

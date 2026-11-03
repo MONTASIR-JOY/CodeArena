@@ -14,3 +14,4 @@ public interface PlatformSource {
     List<ContestEntity> fetchUpcomingContests() throws Exception;
     List<SolveEntity> fetchUserAcceptedSubmissions(String handle) throws Exception;
 }
+

@@ -74,8 +74,42 @@ public class CalendarFragment extends Fragment implements
 
         setupRecyclerViews();
         setupFiltersAndNavigation();
+        setupCalendarCoachButton();
         observeCalendarData();
         refreshRemoteContests();
+    }
+
+    private void setupCalendarCoachButton() {
+        binding.btnView7DayPlan.setOnClickListener(v -> {
+            com.kuet.codearena.util.PreferenceHelper prefs = new com.kuet.codearena.util.PreferenceHelper(requireContext());
+            double practiceRating = prefs.getPracticeRating();
+
+            com.kuet.codearena.util.AppExecutors.getInstance().diskIO().execute(() -> {
+                List<com.kuet.codearena.coach.CoachEngine.CalendarPlanItem> plan =
+                        com.kuet.codearena.coach.CoachEngine.build7DayPlan(requireContext(), practiceRating);
+
+                com.kuet.codearena.util.AppExecutors.getInstance().mainThread().execute(() -> {
+                    if (!isAdded()) return;
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Tailored to your Practice Rating (~").append((int) practiceRating).append("):\n\n");
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d", Locale.getDefault());
+                    for (com.kuet.codearena.coach.CoachEngine.CalendarPlanItem item : plan) {
+                        String dateStr = sdf.format(new Date(item.getDateMs()));
+                        String badge = "[" + item.getAction() + "] ";
+                        sb.append("• ").append(dateStr).append(" - ").append(badge).append(item.getTitle()).append("\n");
+                        sb.append("  ").append(item.getReason()).append("\n\n");
+                    }
+
+                    new MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("7-Day Calendar Coach Strategy")
+                            .setMessage(sb.toString().trim())
+                            .setPositiveButton("Got It", null)
+                            .show();
+                });
+            });
+        });
     }
 
     private void setupRecyclerViews() {
