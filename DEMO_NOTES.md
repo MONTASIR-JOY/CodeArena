@@ -89,3 +89,4 @@ This document serves as your complete script for the live oral examination and p
    * Virtual Run mode, Spaced Repetition, Canvas Timers, XML Parsing, Practice Ladder, and Offline Leaderboard all execute 100% locally from Room SQLite.
 3. **If Google Play Services is missing on an emulator:**
    * Tap *"Continue without account"* on the login screen to enter guest mode with all local and simulated leaderboard features enabled.
+

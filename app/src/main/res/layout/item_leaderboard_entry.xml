@@ -67,3 +67,4 @@
             tools:text="14 solves" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+

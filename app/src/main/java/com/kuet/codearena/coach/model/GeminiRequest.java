@@ -50,3 +50,4 @@ public class GeminiRequest {
         return contents;
     }
 }
+

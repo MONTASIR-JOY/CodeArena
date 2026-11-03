@@ -168,3 +168,4 @@ Each successful verification marks the step complete and schedules the subsequen
 
 * **AtCoder & LeetCode Official Auth:** Unofficial community endpoints are utilized for AtCoder and LeetCode since neither platform offers open OAuth2 login for third-party mobile clients.
 * **Compiler Playground:** Future iterations could embed an in-app code editor and remote execution engine (e.g., Judge0) to allow solving problems directly inside the application.
+

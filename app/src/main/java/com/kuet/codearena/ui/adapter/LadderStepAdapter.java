@@ -97,3 +97,4 @@ public class LadderStepAdapter extends RecyclerView.Adapter<LadderStepAdapter.Vi
         }
     }
 }
+

@@ -137,3 +137,4 @@ while (cursor != null && cursor.moveToNext()) {
 | **RecyclerView & DiffUtil** | `ContestAdapter.java`, `ProblemAdapter.java`, etc. | Custom ViewHolders with DiffUtil list adapters |
 | **ContentProvider** | `UpsolveContentProvider.java` | `content://com.kuet.codearena.provider/upsolve` |
 | **Firebase Auth & Firestore** | `AuthManager.java`, `FirestoreRepository.java` | Google Sign-In credential exchange and Firestore sync |
+

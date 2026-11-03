@@ -94,3 +94,4 @@ public class TagStatAdapter extends ListAdapter<TagMasteryModel, TagStatAdapter.
         }
     }
 }
+

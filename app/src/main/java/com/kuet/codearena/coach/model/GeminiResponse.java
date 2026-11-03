@@ -38,3 +38,4 @@ public class GeminiResponse {
         return null;
     }
 }
+

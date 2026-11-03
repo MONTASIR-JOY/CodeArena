@@ -13,3 +13,4 @@ public interface AiCoachClient {
 
     void getCoachingMessage(AnonymousUserStats stats, Callback callback);
 }
+

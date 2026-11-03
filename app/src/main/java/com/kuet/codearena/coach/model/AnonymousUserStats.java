@@ -30,3 +30,4 @@ public class AnonymousUserStats {
     public int getSolvedTodayCount() { return solvedTodayCount; }
     public int getUpcomingContestsCount() { return upcomingContestsCount; }
 }
+
