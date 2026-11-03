@@ -72,6 +72,11 @@
             </intent-filter>
         </receiver>
 
+        <provider
+            android:name=".provider.UpsolveContentProvider"
+            android:authorities="com.kuet.codearena.provider"
+            android:exported="true" />
+
     </application>
 
 </manifest>

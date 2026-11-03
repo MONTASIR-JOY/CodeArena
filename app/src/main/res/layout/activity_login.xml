@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <ImageView
+        android:id="@+id/ivLoginLogo"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/ic_trophy"
+        app:layout_constraintBottom_toTopOf="@id/tvLoginTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/primary_blue" />
+
+    <TextView
+        android:id="@+id/tvLoginTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/app_name"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@id/tvLoginSubtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivLoginLogo" />
+
+    <TextView
+        android:id="@+id/tvLoginSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Sign in to sync your ratings to global leaderboards and enable cloud backups."
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/cardBenefits"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginTitle" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardBenefits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="1dp"
+        app:layout_constraintBottom_toTopOf="@id/btnGoogleSignIn"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginSubtitle"
+        app:strokeColor="@color/card_stroke_light"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_check"
+                android:drawablePadding="8dp"
+                android:text="Real-time virtual contest simulation"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="13sp"
+                app:drawableTint="@color/secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/ic_check"
+                android:drawablePadding="8dp"
+                android:text="Spaced repetition upsolving &amp; streaks"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="13sp"
+                app:drawableTint="@color/secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/ic_check"
+                android:drawablePadding="8dp"
+                android:text="Offline rule-based ladder &amp; AI coach"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="13sp"
+                app:drawableTint="@color/secondary" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Google Sign-In Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoogleSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/primary_blue"
+        android:text="@string/sign_in_with_google"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toTopOf="@id/tvCloudDisabledNotice" />
+
+    <!-- Notice if Firebase unconfigured -->
+    <TextView
+        android:id="@+id/tvCloudDisabledNotice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_tag_chip"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/cloud_features_disabled"
+        android:textColor="@color/gray_600"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/btnContinueGuest"
+        tools:visibility="visible" />
+
+    <!-- Continue Guest Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinueGuest"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/continue_guest"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
