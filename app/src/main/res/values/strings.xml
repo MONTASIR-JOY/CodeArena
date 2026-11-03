@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">CodeArena</string>
+    <string name="title_home">Home</string>
+    <string name="title_contests">Contests</string>
+    <string name="title_calendar">Calendar</string>
+    <string name="title_practice">Practice</string>
+    <string name="title_leaderboard">Leaderboard</string>
+    <string name="title_profile">Profile</string>
+
+    <string name="cloud_features_disabled">Cloud features disabled (Firebase not configured)</string>
+    <string name="not_configured">Not configured</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="continue_guest">Continue without account</string>
+    <string name="sign_out">Sign Out</string>
+
+    <string name="loading">Loading…</string>
+    <string name="retry">Retry</string>
+    <string name="no_data">No data available</string>
+    <string name="no_contests_found">No contests found matching criteria</string>
+    <string name="no_upsolve_items">Upsolve queue is empty. Great job!</string>
+    <string name="start_virtual_run">Start Virtual Contest</string>
+    <string name="finish_contest">Finish Contest</string>
+    <string name="share_result">Share Result</string>
+    <string name="add_to_calendar">Add to Phone Calendar</string>
+    <string name="mark_solved">Mark Solved</string>
+    <string name="verify_ac">Verify AC</string>
+    <string name="sync_solves">Sync Solves</string>
+    <string name="ai_generated_label">AI-generated</string>
+</resources>

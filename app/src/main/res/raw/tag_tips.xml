@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tagTips>
+    <tip tag="dp">
+        <title>Dynamic Programming Mastery</title>
+        <advice>Define clear subproblems and states first. Write down base cases and transition equations on paper before coding. Focus on identifying overlapping subproblems and optimal substructure.</advice>
+    </tip>
+    <tip tag="graphs">
+        <title>Graph Algorithms Strategy</title>
+        <advice>Check graph constraints carefully: directed vs undirected, weighted, cyclic, or trees. Master BFS/DFS for traversals, Dijkstra for non-negative shortest paths, and DSU for connected components.</advice>
+    </tip>
+    <tip tag="data structures">
+        <title>Data Structures Precision</title>
+        <advice>Choose the simplest structure that supports your operations within the time limit. Practice Segment Trees, Fenwick Trees (BIT), and Monotonic Stacks until they feel second nature.</advice>
+    </tip>
+    <tip tag="math">
+        <title>Mathematical Insight</title>
+        <advice>Look for symmetries, modular arithmetic properties, prime factorizations, and combinatorics patterns. Calculate small cases by hand to spot sequences and invariant relationships.</advice>
+    </tip>
+    <tip tag="greedy">
+        <title>Greedy Choice Verification</title>
+        <advice>Greedy algorithms require rigorous proof: verify if local choices never rule out global optima. Sort by end-time, ratio, or natural order, and test edge cases like ties and reversals.</advice>
+    </tip>
+    <tip tag="strings">
+        <title>String Processing Techniques</title>
+        <advice>Learn polynomial rolling hash with double modulo for substring comparisons. Use Trie for prefix searches and KMP or Z-algorithm for linear pattern matching.</advice>
+    </tip>
+    <tip tag="trees">
+        <title>Tree Traversal &amp; Rerooting</title>
+        <advice>Exploit tree hierarchy with tree DP, LCA (binary lifting), and Euler tour flattening to convert subtree queries into array range queries.</advice>
+    </tip>
+    <tip tag="binary search">
+        <title>Binary Search on Answer</title>
+        <advice>When the answer space is monotonic (if X is possible, any Y &gt;= X is also possible), frame the problem as a check(mid) boolean predicate. Be vigilant with mid calculation to prevent infinite loops.</advice>
+    </tip>
+    <tip tag="constructive algorithms">
+        <title>Constructive Thinking</title>
+        <advice>Work backwards from the target state or build inductive patterns (n=1, n=2, n=3). Avoid overcomplicating: constructive problems usually have an elegant, symmetric invariant.</advice>
+    </tip>
+    <tip tag="two pointers">
+        <title>Two Pointers &amp; Sliding Window</title>
+        <advice>Maintain invariant bounds where the right pointer expands and the left pointer shrinks the window once conditions violate. Great for contiguous subsegments and subarray sums.</advice>
+    </tip>
+</tagTips>
