@@ -226,6 +226,7 @@ public class UserPreferencesRepository {
 
     public void saveLeetCodeSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_LC_SOLVED_COUNT, count).apply();
+        requestBackup();
     }
 
     public int getCodeChefSolvedCount() {
@@ -234,6 +235,7 @@ public class UserPreferencesRepository {
 
     public void saveCodeChefSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_CC_SOLVED_COUNT, count).apply();
+        requestBackup();
     }
 
     public int getAtCoderSolvedCount() {
@@ -242,6 +244,7 @@ public class UserPreferencesRepository {
 
     public void saveAtCoderSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_ATCODER_SOLVED_COUNT, count).apply();
+        requestBackup();
     }
 
     public int getHackerRankSolvedCount() {
@@ -250,6 +253,7 @@ public class UserPreferencesRepository {
 
     public void saveHackerRankSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_HR_SOLVED_COUNT, count).apply();
+        requestBackup();
     }
 
     public int getCfSolvedCount() {
@@ -258,6 +262,7 @@ public class UserPreferencesRepository {
 
     public void saveCfSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_CF_SOLVED_COUNT, count).apply();
+        requestBackup();
     }
 
     // ----- Misc settings -----

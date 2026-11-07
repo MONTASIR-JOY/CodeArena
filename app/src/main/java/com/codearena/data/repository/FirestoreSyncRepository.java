@@ -49,6 +49,25 @@ public class FirestoreSyncRepository {
         userData.put("codechefHandle", prefs.getCodeChefHandle());
         userData.put("atcoderHandle", prefs.getAtCoderHandle());
         userData.put("hackerrankHandle", prefs.getHackerRankHandle());
+
+        // Structured platform handles map for clear Firestore Console display
+        Map<String, String> handlesMap = new HashMap<>();
+        handlesMap.put("codeforces", prefs.getHandle());
+        handlesMap.put("leetcode", prefs.getLeetCodeHandle());
+        handlesMap.put("codechef", prefs.getCodeChefHandle());
+        handlesMap.put("atcoder", prefs.getAtCoderHandle());
+        handlesMap.put("hackerrank", prefs.getHackerRankHandle());
+        userData.put("handles", handlesMap);
+
+        // Platform solve counts
+        Map<String, Integer> solvedCountsMap = new HashMap<>();
+        solvedCountsMap.put("codeforces", prefs.getCfSolvedCount());
+        solvedCountsMap.put("leetcode", prefs.getLeetCodeSolvedCount());
+        solvedCountsMap.put("codechef", prefs.getCodeChefSolvedCount());
+        solvedCountsMap.put("atcoder", prefs.getAtCoderSolvedCount());
+        solvedCountsMap.put("hackerrank", prefs.getHackerRankSolvedCount());
+        userData.put("solvedCounts", solvedCountsMap);
+
         userData.put("rating", prefs.getUserRating());
         userData.put("readBlogIds", new ArrayList<>(prefs.getReadBlogIds()));
         userData.put("readCatalogIds", new ArrayList<>(prefs.getReadCatalogIds()));
@@ -80,20 +99,46 @@ public class FirestoreSyncRepository {
                 DocumentSnapshot doc = task.getResult();
                 UserPreferencesRepository prefs = new UserPreferencesRepository(context);
 
+                Map<String, Object> handles = (Map<String, Object>) doc.get("handles");
+
                 String cf = doc.getString("codeforcesHandle");
+                if ((cf == null || cf.isEmpty()) && handles != null) cf = (String) handles.get("codeforces");
                 if (cf != null && !cf.isEmpty()) prefs.saveHandle(cf);
 
                 String lc = doc.getString("leetcodeHandle");
+                if ((lc == null || lc.isEmpty()) && handles != null) lc = (String) handles.get("leetcode");
                 if (lc != null && !lc.isEmpty()) prefs.saveLeetCodeHandle(lc);
 
                 String cc = doc.getString("codechefHandle");
+                if ((cc == null || cc.isEmpty()) && handles != null) cc = (String) handles.get("codechef");
                 if (cc != null && !cc.isEmpty()) prefs.saveCodeChefHandle(cc);
 
                 String ac = doc.getString("atcoderHandle");
+                if ((ac == null || ac.isEmpty()) && handles != null) ac = (String) handles.get("atcoder");
                 if (ac != null && !ac.isEmpty()) prefs.saveAtCoderHandle(ac);
 
                 String hr = doc.getString("hackerrankHandle");
+                if ((hr == null || hr.isEmpty()) && handles != null) hr = (String) handles.get("hackerrank");
                 if (hr != null && !hr.isEmpty()) prefs.saveHackerRankHandle(hr);
+
+                Map<String, Object> counts = (Map<String, Object>) doc.get("solvedCounts");
+                if (counts != null) {
+                    if (counts.get("codeforces") instanceof Number) {
+                        prefs.saveCfSolvedCount(((Number) counts.get("codeforces")).intValue());
+                    }
+                    if (counts.get("leetcode") instanceof Number) {
+                        prefs.saveLeetCodeSolvedCount(((Number) counts.get("leetcode")).intValue());
+                    }
+                    if (counts.get("codechef") instanceof Number) {
+                        prefs.saveCodeChefSolvedCount(((Number) counts.get("codechef")).intValue());
+                    }
+                    if (counts.get("atcoder") instanceof Number) {
+                        prefs.saveAtCoderSolvedCount(((Number) counts.get("atcoder")).intValue());
+                    }
+                    if (counts.get("hackerrank") instanceof Number) {
+                        prefs.saveHackerRankSolvedCount(((Number) counts.get("hackerrank")).intValue());
+                    }
+                }
 
                 Long rating = doc.getLong("rating");
                 if (rating != null) prefs.saveUserRating(rating.intValue());
