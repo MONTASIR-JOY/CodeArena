@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.codearena.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.codearena.data.db.AppDatabase;
 import com.codearena.data.db.entity.UpsolveItemEntity;
 import com.codearena.data.model.CfContest;
@@ -81,8 +84,16 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupNavigationListeners() {
-        binding.cardProfile.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.nav_settings));
+        binding.cardProfile.setOnClickListener(v -> {
+            if (prefsRepo.getHandle().isEmpty()) {
+                showHandleDialog("Codeforces", "e.g. tourist, ecnerwala", prefsRepo.getHandle(), newHandle -> {
+                    prefsRepo.saveHandle(newHandle);
+                    loadData();
+                });
+            } else {
+                Navigation.findNavController(v).navigate(R.id.nav_settings);
+            }
+        });
 
         binding.cardActionContests.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.nav_contests));
@@ -243,13 +254,51 @@ public class HomeFragment extends Fragment {
         updatePlatformPillDisplay(hr, prefsRepo.getHackerRankSolvedCount(), binding.tvHomeHackerRank);
 
         binding.pillLeetCode.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.nav_settings));
+                showHandleDialog("LeetCode", "e.g. leetcode_user", prefsRepo.getLeetCodeHandle(), newHandle -> {
+                    prefsRepo.saveLeetCodeHandle(newHandle);
+                    loadData();
+                }));
         binding.pillCodeChef.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.nav_settings));
+                showHandleDialog("CodeChef", "e.g. codechef_handle", prefsRepo.getCodeChefHandle(), newHandle -> {
+                    prefsRepo.saveCodeChefHandle(newHandle);
+                    loadData();
+                }));
         binding.pillAtCoder.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.nav_settings));
+                showHandleDialog("AtCoder", "e.g. chokudai", prefsRepo.getAtCoderHandle(), newHandle -> {
+                    prefsRepo.saveAtCoderHandle(newHandle);
+                    loadData();
+                }));
         binding.pillHackerRank.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.nav_settings));
+                showHandleDialog("HackerRank", "e.g. hackerrank_id", prefsRepo.getHackerRankHandle(), newHandle -> {
+                    prefsRepo.saveHackerRankHandle(newHandle);
+                    loadData();
+                }));
+    }
+
+    private interface OnHandleSavedListener {
+        void onSaved(String newHandle);
+    }
+
+    private void showHandleDialog(String platform, String hint, String currentHandle, OnHandleSavedListener listener) {
+        if (!isAdded()) return;
+        EditText input = new EditText(requireContext());
+        input.setHint(hint);
+        input.setText(currentHandle != null ? currentHandle : "");
+        input.setSingleLine(true);
+        int padding = (int) (16 * getResources().getDisplayMetrics().density);
+        input.setPadding(padding, padding, padding, padding);
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(platform + " Handle")
+                .setMessage("Enter your official " + platform + " handle / username:")
+                .setView(input)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String newHandle = input.getText().toString().trim();
+                    listener.onSaved(newHandle);
+                    Toast.makeText(requireContext(), platform + " handle saved & synced!", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void renderRatingChart(List<CfRatingChange> history) {
