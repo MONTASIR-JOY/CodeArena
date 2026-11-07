@@ -6,14 +6,14 @@
 
 <p align="center">
   <strong>⚔️ Code · Compete · Upsolve ⚔️</strong><br>
-  <em>The ultimate competitive programming companion for Android — with live virtual contest simulation, spaced-repetition upsolving, multi-platform tracking, and AI-powered coaching.</em>
+  <em>The ultimate competitive programming companion for Android — with live virtual contest simulation, spaced-repetition upsolving, multi-platform tracking, Cloud Firestore sync, and AI-powered coaching.</em>
 </p>
 
 <p align="center">
   <a href="#-features"><img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform Android" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Language-Java_8%2F17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Language Java" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Architecture-MVVM-0052CC?style=for-the-badge" alt="Architecture MVVM" /></a>
-  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Database-Room_SQLite-4285F4?style=for-the-badge&logo=sqlite&logoColor=white" alt="Database Room SQLite" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Database-Room_SQLite_&_Firestore-4285F4?style=for-the-badge&logo=firebase&logoColor=white" alt="Database Room SQLite and Firestore" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/AI_Coach-Google_Gemini-8E75C2?style=for-the-badge&logo=google&logoColor=white" alt="AI Google Gemini" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Auth-Firebase_&_Google-FFA611?style=for-the-badge&logo=firebase&logoColor=white" alt="Auth Firebase" /></a>
   <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=gradle&logoColor=white" alt="Build Passing" />
@@ -26,9 +26,10 @@
 - [✨ Overview](#-overview)
 - [🔥 Core Highlights](#-core-highlights)
 - [📱 Feature Showcase](#-feature-showcase)
+- [☁️ Cloud Firestore & Firebase Integration](#️-cloud-firestore--firebase-integration)
 - [🏗️ System Architecture](#️-system-architecture)
 - [💻 Tech Stack & Libraries](#-tech-stack--libraries)
-- [🎓 Academic & Syllabus Alignment (CSE 2200)](#-academic--syllabus-alignment-cse-2200)
+- [🎓 Academic & Syllabus Alignment (CSE 2200 / Lab 8–11)](#-academic--syllabus-alignment-cse-2200--lab-811)
 - [📂 Project Directory Structure](#-project-directory-structure)
 - [🚀 Getting Started & Setup](#-getting-started--setup)
 - [📦 Build & Installation](#-build--installation)
@@ -39,9 +40,9 @@
 
 ## ✨ Overview
 
-**CodeArena** is a production-grade, native Android application engineered in **pure Java** to empower competitive programmers. Whether you are aiming for *Candidate Master* on Codeforces or preparing for algorithmic coding rounds, **CodeArena** unifies your entire training workflow into a single, high-performance ecosystem.
+**CodeArena** is a production-grade, native Android application engineered in **pure Java** to empower competitive programmers. Whether you are aiming for *Candidate Master* on Codeforces, solving algorithmic challenges on LeetCode, or preparing for high-stakes technical coding rounds, **CodeArena** unifies your entire training workflow into a single, high-performance ecosystem.
 
-It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, LeetCode, HackerRank**), offers real-time virtual contest simulation with custom background services, enforces long-term mastery via spaced repetition, and introduces an interactive **Gemini AI Coach** that guides you algorithmically without spoiling solutions.
+It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, LeetCode, HackerRank**), offers real-time virtual contest simulation with custom background services, enforces long-term mastery via spaced repetition, provides bidirectional **Cloud Firestore** profile synchronization, and introduces an interactive **Gemini AI Coach** that guides you algorithmically without spoiling solutions.
 
 ---
 
@@ -56,10 +57,10 @@ It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, Lee
    │  • Rank estimate  │  • Tag mastery    │  • Code review                 │
    │  • Post-analysis  │  • 200-step chips │  • 7-day training plan         │
    ├───────────────────┼───────────────────┼────────────────────────────────┤
-   │ 🌐 Multi-Platform │ 📰 Community Feed │ 🛡️ Multi-Account Security      │
-   │  • Clist & CF API │  • Blog reader    │  • Firebase + Google Sign-In   │
-   │  • Sync calendar  │  • Topic catalogs │  • User-scoped DB isolation    │
-   │  • Friend ratings │  • Read tracking  │  • Isolated SharedPreferences  │
+   │ 🌐 Multi-Platform │ ☁️ Cloud Sync     │ 🛡️ Multi-Account Security      │
+   │  • Clist & CF API │  • Firestore DB   │  • Firebase + Google Sign-In   │
+   │  • 5 platforms    │  • Live handles   │  • User-scoped DB isolation    │
+   │  • Solve counts   │  • Solve counts   │  • ContentProvider sharing     │
    └───────────────────┴───────────────────┴────────────────────────────────┘
 ```
 
@@ -68,7 +69,7 @@ It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, Lee
 ## 📱 Feature Showcase
 
 ### 1. 🏆 Virtual Contest Arena & Live Simulation
-* **Live Timer Service**: Runs as a persistent Android **Foreground Service** with active status notifications, keeping countdowns uninterrupted even if the screen turns off or the app is minimized.
+* **Live Timer Service**: Runs as a persistent Android **Foreground Service** (`ContestTimerService`) with notification tray updates and interactive actions, keeping countdowns uninterrupted even if the screen turns off or the app is minimized.
 * **Realistic Rank & Rating Estimator**: Evaluates penalty and solve times against historical contest distributions to predict your virtual rank and delta.
 * **Deep Post-Contest Analysis**: Immediate breakdowns of problems solved, penalties incurred, tag distributions, and upsolving gaps.
 
@@ -80,7 +81,7 @@ It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, Lee
 * **Home Screen Daily Widget**: Maintain daily coding streaks right from your device's home screen via `AppWidgetProvider`.
 
 ### 3. 🤖 Google Gemini AI Algorithmic Coach
-* **3-Tier Progressive Hints**: Never spoil a problem outright:
+* **3-Tier Progressive Hints**:
   1. 💡 *Observation & Intuition*: Highlights mathematical properties or subtle invariants.
   2. 🧭 *Algorithmic Direction*: Points toward the correct data structure or reduction (e.g., segment tree, DP state definition).
   3. 📝 *Pseudocode & Complexity*: Full algorithmic outline and complexity breakdown when completely stuck.
@@ -88,17 +89,78 @@ It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, Lee
 * **7-Day Dynamic Training Plan**: Synthesizes your historical weaknesses into an actionable 7-day schedule.
 
 ### 4. 🌐 Multi-Platform Aggregation & Community
-* **Unified Contest Calendar**: Pulls upcoming contests across Codeforces, AtCoder, CodeChef, LeetCode, and HackerRank using the Clist.by REST API.
-* **Local Reminder Alarms**: Uses `AlarmManager` with exact scheduling so you never miss a rated round.
+* **Unified 5-Platform Support**: Track handles and live solve statistics across **Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank**.
+* **1-Tap Handle Editing**: Tap any platform badge directly on the Home screen or in Settings to update your handle and instantly sync it to Cloud Firestore.
+* **Contest Calendar & Clist.by Integration**: Aggregates upcoming rated contests across competitive sites with local `AlarmManager` reminders.
 * **Codeforces Blogs & Topic Catalogs**: Full markdown and interactive reader for community tutorials and educational catalogs with read/unread tracking.
 * **Friends Radar**: Monitor your peers' rating graphs, compare head-to-head solve statistics, and read blogs authored by friends.
 
-### 5. 🛡️ Strict Multi-Account Data Isolation
+### 5. 🛡️ Multi-Account Isolation & Content Provider
 * **Dynamic Scoping**: Every user who logs in with Google or Email/Password gets an isolated environment:
   - Local SQLite Database: `codearena_db_<uid>.db`
   - SharedPreferences: `codearena_preferences_<uid>.xml`
-* **Zero Cross-Account Leakage**: All handles, solved statuses, blog read history, and favorites are 100% private to the active account.
-* **Forced Account Chooser**: Clean Google Sign-Out logic clears cached tokens to permit seamless account switching.
+* **Auto-Migration**: Any handle entered in guest mode automatically migrates to your Google account upon sign-in.
+* **CodeArenaContentProvider**: Exposes structured inter-app URIs (`content://com.codearena.provider/contests`, `/problems`, `/virtual_runs`, `/upsolve`) using Android's native `ContentProvider` component.
+
+---
+
+## ☁️ Cloud Firestore & Firebase Integration
+
+CodeArena includes complete bidirectional synchronization with **Google Cloud Firestore** under collection `users/{uid}` via `FirestoreSyncRepository.java`.
+
+### Document Schema in Cloud Firestore
+```json
+{
+  "uid": "d98FhK2l9LmP4vQ...",
+  "email": "user@gmail.com",
+
+  "handles": {
+    "codeforces": "tourist",
+    "leetcode": "user_lc",
+    "codechef": "user_cc",
+    "atcoder": "chokudai",
+    "hackerrank": "user_hr"
+  },
+
+  "solvedCounts": {
+    "codeforces": 132,
+    "leetcode": 345,
+    "codechef": 85,
+    "atcoder": 48,
+    "hackerrank": 62
+  },
+
+  "codeforcesHandle": "tourist",
+  "leetcodeHandle": "user_lc",
+  "codechefHandle": "user_cc",
+  "atcoderHandle": "chokudai",
+  "hackerrankHandle": "user_hr",
+
+  "rating": 1640,
+  "readBlogIds": [101, 102],
+  "readCatalogIds": [1, 2],
+  "lastUpdated": 1731002594000
+}
+```
+
+### Automatic Sync Triggers
+* **On Sign-In / Login**: `pullFromFirestore()` automatically pulls and restores all 5 handles, solve counts, and reading progress.
+* **On Handle Update**: Tapping any platform badge on Home or updating in Settings triggers an immediate push to Firestore.
+* **On Daily Solve Count Refresh**: As live solve numbers update from platform APIs, Firestore is refreshed with `SetOptions.merge()`.
+* **On Rating Change**: When a new Codeforces rating is calculated after a contest, it is synced to Firestore.
+
+### Cloud Firestore Security Rules
+In the [Firebase Console](https://console.firebase.google.com/) under **Firestore Database → Rules**, publish:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
 
 ---
 
@@ -110,8 +172,8 @@ CodeArena adheres to modern **Android Jetpack MVVM (Model-View-ViewModel)** guid
 flowchart TD
     subgraph UI ["🎨 Presentation Layer (UI)"]
         Activity["MainActivity / LoginActivity"]
-        Fragments["UI Fragments<br>(Contests, Mastery, Coach, etc.)"]
-        Adapters["RecyclerView Adapters<br>(ProblemAdapter, ContestAdapter)"]
+        Fragments["UI Fragments<br>(Contests, Mastery, Coach, Home, Settings)"]
+        Adapters["RecyclerView Adapters<br>(ProblemAdapter, ContestAdapter, etc.)"]
     end
 
     subgraph VM ["⚡ ViewModel Layer"]
@@ -120,18 +182,21 @@ flowchart TD
 
     subgraph REPO ["📦 Repository Layer"]
         Repositories["Domain Repositories<br>(ContestRepo, MasteryRepo, UserPrefsRepo)"]
+        FirestoreSync["FirestoreSyncRepository<br>(Cloud Firestore Sync Engine)"]
     end
 
     subgraph DATA ["💾 Data Layer"]
-        subgraph LOCAL ["Local Storage"]
+        subgraph LOCAL ["Local Storage & System"]
             RoomDB[("Room Database SQLite<br>codearena_db_UID")]
             Prefs[("SharedPreferences<br>codearena_prefs_UID")]
+            ContentProv["CodeArenaContentProvider<br>content://com.codearena.provider"]
         end
-        subgraph REMOTE ["Remote Network APIs"]
+        subgraph REMOTE ["Remote Cloud Services"]
             CF_API["Codeforces REST API"]
             CLIST_API["Clist.by API"]
             GEMINI_API["Google Gemini 1.5 API"]
-            FIREBASE["Firebase Auth SDK"]
+            FIREBASE_AUTH["Firebase Auth (Google & Email)"]
+            FIRESTORE["Google Cloud Firestore<br>users/{uid}"]
         end
     end
 
@@ -141,10 +206,13 @@ flowchart TD
     ViewModels --> Repositories
     Repositories --> RoomDB
     Repositories --> Prefs
+    Repositories --> FirestoreSync
+    FirestoreSync --> FIRESTORE
     Repositories --> CF_API
     Repositories --> CLIST_API
     Repositories --> GEMINI_API
-    Activity --> FIREBASE
+    Activity --> FIREBASE_AUTH
+    RoomDB --> ContentProv
 ```
 
 ---
@@ -154,33 +222,35 @@ flowchart TD
 | Category | Technology | Usage / Purpose |
 | :--- | :--- | :--- |
 | **Language** | **Java (Java 8 / JDK 17)** | 100% native Java implementation (0 Kotlin) |
-| **Platform** | **Android SDK (API 26 – 33)** | Android 8.0 Oreo up to Android 13 Tiramisu |
+| **Platform** | **Android SDK (API 26 – 34)** | Android 8.0 Oreo up to Android 14 UpsideDownCake |
 | **Architecture** | **MVVM + Repositories** | Decoupled, lifecycle-aware architecture |
 | **UI Components** | **Google Material Design 3** | MaterialCardView, ChipGroups, LinearProgressIndicator |
 | **View Binding** | **Android ViewBinding** | Compile-time type-safe layout binding |
 | **Navigation** | **Jetpack Navigation Component** | Single-Activity architecture (`NavHostFragment`) |
 | **Local Database** | **AndroidX Room 2.5.2** | SQLite abstraction, DAOs, TypeConverters, Entities |
+| **Cloud Database** | **Google Cloud Firestore 24.11+** | Real-time cloud synchronization for handles, solve counts & bookmarks |
 | **Networking** | **Retrofit 2 + OkHttp 3** | HTTP REST communication with interceptors and rate limiters |
 | **Serialization** | **Google Gson 2.9.0** | Robust JSON parsing and serialization |
 | **Authentication** | **Firebase Auth + Google Play Services** | Secure authentication and Google One-Tap Sign-In |
 | **Generative AI** | **Google Gemini 1.5 API** | AI Coach for progressive hints, reviews, and training plans |
 | **System Services** | **Foreground Service & AlarmManager** | Background contest timer & exact reminder notifications |
+| **Content Provider** | **Android ContentProvider** | Inter-app data sharing via `CodeArenaContentProvider` |
 | **Widgets** | **Android AppWidgetProvider** | Home screen daily challenge glance widget |
 
 ---
 
-## 🎓 Academic & Syllabus Alignment (CSE 2200)
+## 🎓 Academic & Syllabus Alignment (CSE 2200 / Lab 8–11)
 
 This project was built to fulfill and exceed the requirements of **CSE 2200: Advanced Programming Laboratory**:
 
-| Syllabus Module | Course Requirement | CodeArena Implementation |
+| Syllabus Module | Lab Topic / Requirement | CodeArena Implementation |
 | :--- | :--- | :--- |
-| **Language Standards** | Pure Java (No Kotlin) | **100% Java** across all 50+ classes and utilities. |
-| **Week 8: Android Basics** | Manifest, Activity Lifecycle, Intents, ViewBinding | Multiple Activities, explicit intents, full ViewBinding. |
-| **Week 9: UI & UX** | `RecyclerView`, Custom ViewHolders, Cards | Custom item layouts, interactive Chip filters, Material 3 cards. |
-| **Week 10: Android Components** | **Services**, **Broadcast Receivers**, App Widgets | • `ContestTimerService` (Foreground Service)<br>• `ContestAlarmReceiver` & `BootReceiver`<br>• `DailyWidgetProvider` (App Widget) |
-| **Week 11: Networking & DB** | REST APIs, **JSON Parsing**, **SQLite**, **Firebase** | • Retrofit 2 + Gson for Codeforces & Clist APIs<br>• Room ORM (SQLite) with multi-tenant isolation<br>• Firebase Authentication & Google Sign-In |
-| **Concurrency & Threading** | Multithreading, `ExecutorService` | Java `Executors.newSingleThreadExecutor()` and `databaseWriteExecutor` for non-blocking operations. |
+| **Language Standards** | Pure Java (No Kotlin) | **100% Java** across all source files and repositories. |
+| **Lab 8: Android Basics & Navigation** | Manifest, Activity Lifecycle, Explicit/Implicit Intents, View Binding | • Multi-Activity navigation (`LoginActivity` ↔ `MainActivity`)<br>• Explicit and implicit intents for external links & sharing<br>• Type-safe Android View Binding used in 100% of layouts. |
+| **Lab 9: UI & Lists** | Layout Design, `RecyclerView`, Custom Adapters, ViewHolders | • `ConstraintLayout`, `LinearLayout`, `CoordinatorLayout`<br>• Dynamic lists with custom adapters (`ContestAdapter`, `ProblemAdapter`, `MasteryAdapter`, `FriendAdapter`, `BlogAdapter`, `UpcomingContestAdapter`). |
+| **Lab 10: Android Components** | **Services**, **Broadcast Receivers**, **Content Providers**, Permissions | • `ContestTimerService` (Foreground service with ongoing notification tray updates)<br>• `ContestAlarmReceiver`, `BootReceiver`, `TimerActionReceiver`<br>• `CodeArenaContentProvider` for structured content sharing<br>• Runtime permission handling (`POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`). |
+| **Lab 11: Networking & Databases** | REST APIs, **JSON Parsing**, **SQLite**, **Firebase Services** | • Retrofit 2 + Gson for external REST APIs (Codeforces & Clist.by)<br>• Room ORM (SQLite) with multi-account isolation (`codearena_db_<uid>.db`)<br>• **Firebase Authentication** (Google Sign-In & Email/Password)<br>• **Cloud Firestore** (`users/{uid}`) syncing 5-platform handles and solve counts. |
+| **Concurrency & Threading** | Multithreading, `ExecutorService` | Java `Executors.newSingleThreadExecutor()` and `databaseWriteExecutor` for non-blocking asynchronous operations. |
 
 ---
 
@@ -198,7 +268,8 @@ d:/CodeArena/
 │   │   │   │   ├── api/                         # Retrofit API clients & interceptors
 │   │   │   │   ├── db/                          # Room DB, DAOs & Entities
 │   │   │   │   ├── model/                       # Data transfer objects (DTOs)
-│   │   │   │   └── repository/                  # Repositories & account-scoped storage
+│   │   │   │   ├── provider/                    # CodeArenaContentProvider
+│   │   │   │   └── repository/                  # Repositories & FirestoreSyncRepository
 │   │   │   ├── receiver/                        # BootReceiver & ContestAlarmReceiver
 │   │   │   ├── service/                         # Foreground ContestTimerService
 │   │   │   ├── ui/                              # Feature UI modules
@@ -237,7 +308,7 @@ d:/CodeArena/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/CodeArena.git
+git clone https://github.com/MONTASIR-JOY/CodeArena.git
 cd CodeArena
 ```
 
@@ -254,11 +325,21 @@ CLIST_USERNAME=your_clist_username
 CLIST_API_KEY=your_clist_api_key
 ```
 
-### 3. Configure Firebase Authentication
-1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a project.
-2. Enable **Google Sign-In** and **Email/Password** under Authentication.
-3. Register your Android app package `com.codearena`.
-4. Register your debug SHA-1 signing fingerprint.
+### 3. Configure Firebase Authentication & Cloud Firestore
+1. Open the [Firebase Console](https://console.firebase.google.com/) and create a project.
+2. Under **Authentication**, enable **Google Sign-In** and **Email/Password**.
+3. Under **Firestore Database**, create a database and publish the security rules:
+   ```javascript
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /{document=**} {
+         allow read, write: if request.auth != null;
+       }
+     }
+   }
+   ```
+4. Register your Android app package `com.codearena` and add your SHA-1 signing fingerprint.
 5. Download `google-services.json` and place it in the `app/` directory.
 
 ---
@@ -289,7 +370,7 @@ adb shell am start -n com.codearena/.ui.auth.LoginActivity
 
 | Permission | Purpose |
 | :--- | :--- |
-| `android.permission.INTERNET` | Communicating with Codeforces, Clist, Firebase, and Gemini APIs |
+| `android.permission.INTERNET` | Communicating with Codeforces, Clist, Firebase, Cloud Firestore, and Gemini APIs |
 | `android.permission.ACCESS_NETWORK_STATE` | Monitoring active network connectivity |
 | `android.permission.FOREGROUND_SERVICE` | Maintaining live virtual contest timers in the foreground |
 | `android.permission.SCHEDULE_EXACT_ALARM` | Scheduling precise contest reminders via AlarmManager |
@@ -300,7 +381,7 @@ adb shell am start -n com.codearena/.ui.auth.LoginActivity
 
 ## 📜 License
 
-Distributed under the **Apache License 2.0**. See `LICENSE` for more information.
+Distributed under the **Apache License 2.0**.
 
 <p align="center">
   Made with ❤️ for Competitive Programmers worldwide.
