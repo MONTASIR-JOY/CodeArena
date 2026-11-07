@@ -373,6 +373,7 @@ public class UserPreferencesRepository {
 
     public void saveUserRating(int rating) {
         getPrefs().edit().putInt(KEY_USER_RATING, rating).apply();
+        requestBackup();
     }
 
     public Set<String> getUserSolvedProblemKeys() {
