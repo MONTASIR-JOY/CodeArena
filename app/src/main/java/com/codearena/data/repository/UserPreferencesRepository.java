@@ -95,10 +95,48 @@ public class UserPreferencesRepository {
         if (prefs == null || !needed.equals(currentPrefName)) {
             currentPrefName = needed;
             prefs = context.getSharedPreferences(needed, Context.MODE_PRIVATE);
+            migrateGuestIfNeeded(prefs);
             updateLiveData();
             prefs.registerOnSharedPreferenceChangeListener((sp, key) -> updateLiveData());
         }
         return prefs;
+    }
+
+    private void migrateGuestIfNeeded(SharedPreferences targetPrefs) {
+        if (targetPrefs == null || currentPrefName.equals(PREF_NAME_PREFIX + "guest")) {
+            return;
+        }
+        String currentHandle = targetPrefs.getString(KEY_HANDLE, "");
+        if (currentHandle.isEmpty()) {
+            // Check guest preferences first, then fallback legacy preferences
+            SharedPreferences guestPrefs = context.getSharedPreferences(PREF_NAME_PREFIX + "guest", Context.MODE_PRIVATE);
+            String sourceHandle = guestPrefs.getString(KEY_HANDLE, "");
+            SharedPreferences source = guestPrefs;
+
+            if (sourceHandle.isEmpty()) {
+                SharedPreferences legacyPrefs = context.getSharedPreferences("codearena_preferences", Context.MODE_PRIVATE);
+                sourceHandle = legacyPrefs.getString(KEY_HANDLE, "");
+                if (!sourceHandle.isEmpty()) {
+                    source = legacyPrefs;
+                }
+            }
+
+            if (!sourceHandle.isEmpty()) {
+                SharedPreferences.Editor editor = targetPrefs.edit();
+                editor.putString(KEY_HANDLE, sourceHandle);
+                editor.putString(KEY_HANDLE_LEETCODE, source.getString(KEY_HANDLE_LEETCODE, ""));
+                editor.putString(KEY_HANDLE_CODECHEF, source.getString(KEY_HANDLE_CODECHEF, ""));
+                editor.putString(KEY_HANDLE_ATCODER, source.getString(KEY_HANDLE_ATCODER, ""));
+                editor.putString(KEY_HANDLE_HACKERRANK, source.getString(KEY_HANDLE_HACKERRANK, ""));
+                editor.putInt(KEY_USER_RATING, source.getInt(KEY_USER_RATING, 0));
+                Set<String> blogs = source.getStringSet(KEY_READ_BLOGS, null);
+                if (blogs != null) editor.putStringSet(KEY_READ_BLOGS, new HashSet<>(blogs));
+                Set<String> catalog = source.getStringSet(KEY_READ_CATALOG, null);
+                if (catalog != null) editor.putStringSet(KEY_READ_CATALOG, new HashSet<>(catalog));
+                editor.apply();
+                FirestoreSyncRepository.uploadToFirestore(context);
+            }
+        }
     }
 
     private void updateLiveData() {
