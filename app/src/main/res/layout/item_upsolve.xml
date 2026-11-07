@@ -1,110 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.CodeArena.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:strokeColor="@color/card_stroke_light"
-    app:strokeWidth="1dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="14dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvUpsolveIndex"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:background="@drawable/bg_tag_chip"
-            android:gravity="center"
-            android:textColor="@color/primary_blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="C" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvUpsolveIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_tag"
+                android:fontFamily="sans-serif-mono"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                tools:text="1850 A" />
+
+            <TextView
+                android:id="@+id/tvUpsolveDue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="12sp"
+                tools:text="Due now" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvUpsolveName"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toStartOf="@id/tvUpsolveRating"
-            app:layout_constraintStart_toEndOf="@id/tvUpsolveIndex"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Hamiltonian Wall" />
-
-        <TextView
-            android:id="@+id/tvUpsolveRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_tag_chip"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="1400" />
-
-        <TextView
-            android:id="@+id/tvUpsolveIntervalBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/bg_tag_chip"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            android:textColor="@color/primary_blue"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/tvUpsolveIndex"
-            app:layout_constraintTop_toBottomOf="@id/tvUpsolveName"
-            tools:text="Day 3 Review" />
-
-        <TextView
-            android:id="@+id/tvUpsolveDue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tvUpsolveIntervalBadge"
-            app:layout_constraintEnd_toStartOf="@id/btnVerifyAc"
-            app:layout_constraintStart_toEndOf="@id/tvUpsolveIntervalBadge"
-            app:layout_constraintTop_toTopOf="@id/tvUpsolveIntervalBadge"
-            tools:text="Due Today" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVerifyAc"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="0dp"
-            android:text="@string/verify_ac"
+            android:fontFamily="sans-serif-bold"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            tools:text="Watermelon" />
+
+        <TextView
+            android:id="@+id/tvUpsolveMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/text_muted"
             android:textSize="12sp"
-            app:cornerRadius="8dp"
-            app:icon="@drawable/ic_check"
-            app:iconSize="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvUpsolveRating" />
+            tools:text="rating 800 · math · review 2 of 5" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUpsolveOpen"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Open"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUpsolveStuck"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Still stuck"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUpsolveSolved"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Solved"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

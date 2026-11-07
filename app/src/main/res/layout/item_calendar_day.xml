@@ -1,63 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/llDayCell"
+    android:id="@+id/layoutDayCell"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
-    android:layout_margin="1dp"
-    android:background="@drawable/bg_tag_chip"
-    android:gravity="center"
+    android:layout_height="72dp"
+    android:background="@drawable/bg_calendar_cell"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:padding="2dp">
 
+    <!-- Day of month number (with circle highlight when selected/today) -->
     <TextView
         android:id="@+id/tvDayNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        tools:text="14" />
-
-    <!-- Indicator Dots Row -->
-    <LinearLayout
-        android:id="@+id/llDotsContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_gravity="start"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:textColor="@color/text_primary_dark"
+        android:textSize="11sp"
+        tools:text="7" />
 
-        <View
-            android:id="@+id/dotContest"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:layout_marginHorizontal="1dp"
-            android:background="@drawable/bg_circle_dot"
-            android:backgroundTint="@color/primary_blue"
+    <!-- Contest pills list inside cell -->
+    <LinearLayout
+        android:id="@+id/layoutPills"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Pill 1 -->
+        <TextView
+            android:id="@+id/tvPill1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/bg_contest_pill"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="1dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="8.5sp"
             android:visibility="gone"
+            tools:text="Codeforces Rd..."
             tools:visibility="visible" />
 
-        <View
-            android:id="@+id/dotUpsolve"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:layout_marginHorizontal="1dp"
-            android:background="@drawable/bg_circle_dot"
-            android:backgroundTint="@color/verdict_pending"
+        <!-- Pill 2 -->
+        <TextView
+            android:id="@+id/tvPill2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/bg_contest_pill"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="1dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="8.5sp"
             android:visibility="gone"
+            tools:text="Starters 264"
             tools:visibility="visible" />
 
-        <View
-            android:id="@+id/dotSolve"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:layout_marginHorizontal="1dp"
-            android:background="@drawable/bg_circle_dot"
-            android:backgroundTint="@color/secondary"
+        <!-- More Pill (e.g. +2 more) -->
+        <TextView
+            android:id="@+id/tvPillMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-bold"
+            android:paddingStart="2dp"
+            android:textColor="@color/primary"
+            android:textSize="8.5sp"
             android:visibility="gone"
+            tools:text="+2 more"
             tools:visibility="visible" />
-
     </LinearLayout>
 
 </LinearLayout>

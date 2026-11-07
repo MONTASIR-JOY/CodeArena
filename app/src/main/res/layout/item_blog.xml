@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.CodeArena.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Top Header: Author, Time Ago, and Blog Rating Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Author Avatar Initial -->
+            <TextView
+                android:id="@+id/tvBlogAvatarInitial"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/bg_chip_tag"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/primary"
+                android:textSize="13sp"
+                tools:text="M" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvBlogAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/text_primary_dark"
+                    android:textSize="14sp"
+                    tools:text="MikeMirzayanov" />
+
+                <TextView
+                    android:id="@+id/tvBlogTimeAgo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_muted_dark"
+                    android:textSize="11sp"
+                    tools:text="2 hours ago" />
+            </LinearLayout>
+
+            <!-- Blog Rating Badge -->
+            <TextView
+                android:id="@+id/tvBlogRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_tag"
+                android:fontFamily="sans-serif-bold"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:textColor="@color/verdict_ok"
+                android:textSize="12sp"
+                tools:text="▲ +145" />
+
+            <!-- Friend toggle button -->
+            <ImageView
+                android:id="@+id/btnBlogFriend"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="Add author to friends"
+                android:focusable="true"
+                android:padding="4dp"
+                android:src="@drawable/ic_person_add"
+                app:tint="@color/text_muted_dark" />
+        </LinearLayout>
+
+        <!-- Blog Title -->
+        <TextView
+            android:id="@+id/tvBlogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-bold"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="3"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="16sp"
+            tools:text="Codeforces Round 1050 (Div. 2) Editorial &amp; Analysis" />
+
+        <!-- Tags Row -->
+        <LinearLayout
+            android:id="@+id/layoutBlogTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvBlogTag1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_tag"
+                android:fontFamily="sans-serif-medium"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:textColor="@color/text_secondary_dark"
+                android:textSize="11sp"
+                tools:text="editorial" />
+
+            <TextView
+                android:id="@+id/tvBlogTag2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_chip_tag"
+                android:fontFamily="sans-serif-medium"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:textColor="@color/text_secondary_dark"
+                android:textSize="11sp"
+                tools:text="round 1050" />
+
+            <TextView
+                android:id="@+id/tvBlogMoreTags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/text_muted_dark"
+                android:textSize="11sp"
+                tools:text="+2 more" />
+        </LinearLayout>
+
+        <!-- Footer: Action hint -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvBlogId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/text_muted_dark"
+                android:textSize="11sp"
+                tools:text="Blog #105214" />
+
+            <!-- Read / Unread checkbox matching Catalog -->
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cbBlogRead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:text="Read"
+                android:textColor="@color/text_secondary_dark"
+                android:textSize="12sp"
+                app:buttonTint="@color/verdict_ok" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-bold"
+                android:text="Read in App →"
+                android:textColor="@color/primary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

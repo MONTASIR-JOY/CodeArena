@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <!-- HackerRank Green Badge with Bold H -->
+  <path
+      android:fillColor="#10B981"
+      android:pathData="M3,6C3,4.3 4.3,3 6,3H18C19.7,3 21,4.3 21,6V18C21,19.7 19.7,21 18,21H6C4.3,21 3,19.7 3,18V6Z" />
+  <path
+      android:fillColor="#FFFFFF"
+      android:pathData="M7,6.5h2.5V10.5h5V6.5H17v11H14.5V13.5h-5v4H7V6.5Z" />
+</vector>
+

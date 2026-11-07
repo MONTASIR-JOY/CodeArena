@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <!-- Top-Level Tab Destinations -->
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.codearena.ui.home.HomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/nav_contests"
+        android:name="com.codearena.ui.contests.ContestsFragment"
+        android:label="Contests" />
+
+    <fragment
+        android:id="@+id/nav_upcoming"
+        android:name="com.codearena.ui.upcoming.UpcomingFragment"
+        android:label="Upcoming Contests" />
+
+    <fragment
+        android:id="@+id/nav_calendar"
+        android:name="com.codearena.ui.calendar.CalendarFragment"
+        android:label="Contest Calendar" />
+
+    <fragment
+        android:id="@+id/nav_upsolve"
+        android:name="com.codearena.ui.upsolve.UpsolveFragment"
+        android:label="Upsolve Queue" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.codearena.ui.settings.SettingsFragment"
+        android:label="Settings" />
+
+    <!-- Feature & Workflow Destinations -->
+    <fragment
+        android:id="@+id/setupFragment"
+        android:name="com.codearena.ui.setup.SetupFragment"
+        android:label="Welcome to CodeArena" />
+
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.codearena.ui.onboarding.OnboardingFragment"
+        android:label="Getting Started" />
+
+    <fragment
+        android:id="@+id/contestDetailFragment"
+        android:name="com.codearena.ui.contestdetail.ContestDetailFragment"
+        android:label="Contest Details" />
+
+    <fragment
+        android:id="@+id/liveContestFragment"
+        android:name="com.codearena.ui.live.LiveContestFragment"
+        android:label="Live Contest Arena" />
+
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="com.codearena.ui.analysis.AnalysisFragment"
+        android:label="Post-Contest Analysis" />
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.codearena.ui.history.HistoryFragment"
+        android:label="Contest History" />
+
+    <fragment
+        android:id="@+id/historyDetailFragment"
+        android:name="com.codearena.ui.history.HistoryDetailFragment"
+        android:label="Contest Run Details" />
+
+    <fragment
+        android:id="@+id/masteryFragment"
+        android:name="com.codearena.ui.mastery.MasteryFragment"
+        android:label="Tag Mastery Levels" />
+
+    <fragment
+        android:id="@+id/coachReviewFragment"
+        android:name="com.codearena.ui.coach.CoachReviewFragment"
+        android:label="AI Coach Review" />
+
+    <fragment
+        android:id="@+id/coachHintFragment"
+        android:name="com.codearena.ui.coach.CoachHintFragment"
+        android:label="AI Hint Coach" />
+
+    <fragment
+        android:id="@+id/trainingPlanFragment"
+        android:name="com.codearena.ui.coach.TrainingPlanFragment"
+        android:label="AI 7-Day Training Plan" />
+
+    <fragment
+        android:id="@+id/recommenderFragment"
+        android:name="com.codearena.ui.recommender.RecommenderFragment"
+        android:label="Recommended Problems" />
+
+    <fragment
+        android:id="@+id/analyticsFragment"
+        android:name="com.codearena.ui.analytics.AnalyticsFragment"
+        android:label="Analytics" />
+
+    <fragment
+        android:id="@+id/dailyChallengeFragment"
+        android:name="com.codearena.ui.daily.DailyChallengeFragment"
+        android:label="Daily Challenge" />
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.codearena.ui.friends.FriendsFragment"
+        android:label="Friends" />
+
+
+    <fragment
+        android:id="@+id/blogsFragment"
+        android:name="com.codearena.ui.blogs.BlogsFragment"
+        android:label="Codeforces Blogs" />
+
+    <fragment
+        android:id="@+id/blogDetailFragment"
+        android:name="com.codearena.ui.blogs.BlogDetailFragment"
+        android:label="Blog" />
+
+    <fragment
+        android:id="@+id/catalogFragment"
+        android:name="com.codearena.ui.catalog.CatalogFragment"
+        android:label="Codeforces Catalog" />
+
+</navigation>

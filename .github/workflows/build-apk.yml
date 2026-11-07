@@ -1,0 +1,46 @@
+name: Build APK
+
+# Builds an installable debug APK in the cloud, so no computer with Android Studio is needed.
+# It runs on every push, or by hand from the Actions tab (Run workflow).
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Install Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Optional: add these as repository secrets to enable the AI coach and other platforms.
+      # With no secrets set they are simply blank and those features stay off.
+      - name: Write optional keys
+        run: |
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> local.properties
+          echo "CLIST_USERNAME=${{ secrets.CLIST_USERNAME }}" >> local.properties
+          echo "CLIST_API_KEY=${{ secrets.CLIST_API_KEY }}" >> local.properties
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeArena-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk

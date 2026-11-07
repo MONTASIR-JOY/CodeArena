@@ -1,284 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/calendarCoordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:orientation="vertical">
 
-    <androidx.core.widget.NestedScrollView
+    <!-- Top App Bar / Title -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/surface_dark"
+        app:title="Contest Calendar"
+        app:titleTextColor="@color/text_primary_dark" />
+
+    <!-- Swipe Refresh Layout -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshCalendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <!-- Platform Filter Chips -->
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:scrollbars="none">
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupPlatform"
-                    android:layout_width="wrap_content"
+                <!-- Month Navigation Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:singleLine="true"
-                    app:singleSelection="true">
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="8dp">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPlatformAll"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                    <!-- Prev Month Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPrevMonth"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:icon="@drawable/ic_arrow_back"
+                        app:iconTint="@color/text_primary_dark" />
+
+                    <!-- Month & Year Title -->
+                    <TextView
+                        android:id="@+id/tvMonthYear"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:gravity="center"
+                        android:textColor="@color/text_primary_dark"
+                        android:textSize="18sp"
+                        tools:text="November 2026" />
+
+                    <!-- Next Month Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNextMonth"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:icon="@drawable/ic_chevron_right"
+                        app:iconTint="@color/text_primary_dark" />
+
+                    <!-- Today Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnToday"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="All Platforms" />
+                        android:layout_marginStart="8dp"
+                        android:text="Today"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPlatformCf"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                <!-- Platform Filter Chips -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="8dp"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupCalendar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Codeforces" />
+                        app:checkedChip="@id/chipCalAll"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPlatformAtCoder"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCalAll"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="All Platforms" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCalCF"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Codeforces" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCalLC"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LeetCode" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCalCC"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CodeChef" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCalAC"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AtCoder" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCalHR"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="HackerRank" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
+                <!-- Calendar Card Container -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.CodeArena.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/stroke_dark"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="AtCoder" />
+                        android:orientation="vertical">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPlatformLeetCode"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="LeetCode" />
+                        <!-- Days of Week Header Row (MON to SUN) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:background="@color/surface_elevated_dark"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPlatformCodeChef"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CodeChef" />
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="MON" />
 
-                </com.google.android.material.chip.ChipGroup>
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="TUE" />
 
-            </HorizontalScrollView>
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="WED" />
 
-            <!-- Custom Month Calendar Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="4dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/card_stroke_light"
-                app:strokeWidth="1dp">
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="THU" />
 
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="FRI" />
+
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="SAT" />
+
+                            <TextView
+                                style="@style/CalendarDayHeader"
+                                android:text="SUN" />
+                        </LinearLayout>
+
+                        <!-- Month Days Grid -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvCalendarGrid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Selected Day Contests Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="6dp">
 
-                    <!-- Month Navigation Header -->
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tvSelectedDayTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:fontFamily="sans-serif-black"
+                        android:textColor="@color/text_primary_dark"
+                        android:textSize="16sp"
+                        tools:text="Contests on Saturday, Nov 7" />
 
-                        <ImageView
-                            android:id="@+id/btnPrevMonth"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_close"
-                            android:rotation="45"
-                            app:tint="?android:attr/textColorPrimary" />
-
-                        <TextView
-                            android:id="@+id/tvCurrentMonthYear"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif-medium"
-                            android:gravity="center"
-                            android:textColor="?android:attr/textColorPrimary"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="November 2026" />
-
-                        <ImageView
-                            android:id="@+id/btnNextMonth"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_close"
-                            android:rotation="225"
-                            app:tint="?android:attr/textColorPrimary" />
-
-                    </LinearLayout>
-
-                    <!-- Days of Week Header -->
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tvSelectedDaySubtitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="S" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="M" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="W" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="F" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-                        <TextView style="@style/Widget.AppCompat.TextView" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="S" android:textSize="11sp" android:textStyle="bold" android:textColor="?android:attr/textColorSecondary"/>
-
-                    </LinearLayout>
-
-                    <!-- 7-Column Month Grid -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCalendarGrid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:nestedScrollingEnabled="false" />
-
-                    <!-- Legend Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <View android:layout_width="6dp" android:layout_height="6dp" android:background="@drawable/bg_circle_dot" android:backgroundTint="@color/primary_blue" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:text="Contest" android:textSize="11sp" android:textColor="?android:attr/textColorSecondary" />
-
-                        <View android:layout_width="6dp" android:layout_height="6dp" android:layout_marginStart="14dp" android:background="@drawable/bg_circle_dot" android:backgroundTint="@color/verdict_pending" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:text="Upsolve Due" android:textSize="11sp" android:textColor="?android:attr/textColorSecondary" />
-
-                        <View android:layout_width="6dp" android:layout_height="6dp" android:layout_marginStart="14dp" android:background="@drawable/bg_circle_dot" android:backgroundTint="@color/secondary" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:text="Solved Day" android:textSize="11sp" android:textColor="?android:attr/textColorSecondary" />
-
-                    </LinearLayout>
-
+                        android:textColor="@color/text_muted_dark"
+                        android:textSize="12sp"
+                        tools:text="2 contests scheduled on this day" />
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- 7-Day Calendar Coach Plan Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardCalendarCoach"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="1dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?attr/dividerHorizontal">
-
-                <LinearLayout
+                <!-- Empty State for Selected Day -->
+                <TextView
+                    android:id="@+id/tvDayEmptyState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical">
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="@drawable/bg_chip_tag"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="No contests scheduled for this date"
+                    android:textColor="@color/text_muted_dark"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_contest"
-                        app:tint="@color/cf_blue"
-                        android:contentDescription="Calendar Coach" />
+                <!-- Selected Day Contests List -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDayContests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="7-Day Calendar Coach Strategy"
-                            android:textColor="?android:attr/textColorPrimary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+</LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvCalendarCoachSubtitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Rounds to join or skip based on your skill bracket"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnView7DayPlan"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="View Plan"
-                        android:textColor="@color/cf_blue" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Day Detail List Header -->
-            <TextView
-                android:id="@+id/tvAgendaHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Upcoming Contests"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
-
-            <!-- Upcoming Contests List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvUpcomingContests"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false" />
-
-            <ProgressBar
-                android:id="@+id/progressCalendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tvEmptyCalendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="No contests scheduled for this selection."
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>

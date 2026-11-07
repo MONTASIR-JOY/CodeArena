@@ -1,57 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand colors -->
-    <color name="primary">#1E293B</color>
-    <color name="primary_variant">#0F172A</color>
+    <!-- Brand Primary & Accent (Neon Tech Cyber / Competitive Programming aesthetic) -->
+    <color name="primary">#0891B2</color>
     <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#CFFAFE</color>
+    <color name="on_primary_container">#083344</color>
 
-    <color name="primary_blue">#2563EB</color>
-    <color name="primary_blue_variant">#1D4ED8</color>
-
-    <color name="secondary">#10B981</color>
-    <color name="secondary_variant">#059669</color>
+    <color name="secondary">#0284C7</color>
     <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#E0F2FE</color>
+    <color name="on_secondary_container">#082F49</color>
 
-    <!-- UI neutrals -->
-    <color name="background_light">#F8FAFC</color>
+    <color name="tertiary">#D97706</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="tertiary_container">#FEF3C7</color>
+    <color name="on_tertiary_container">#451A03</color>
+
+    <!-- Theme-aware colors: Day (Light) values live here, Night (Dark) values in values-night/colors.xml -->
+    <color name="bg_dark">#F8FAFC</color>
+    <color name="surface_dark">#FFFFFF</color>
+    <color name="surface_elevated_dark">#F1F5F9</color>
+    <color name="card_dark">#FFFFFF</color>
+    <color name="stroke_dark">#E2E8F0</color>
+    <color name="text_primary_dark">#0F172A</color>
+    <color name="text_secondary_dark">#475569</color>
+    <color name="text_muted_dark">#64748B</color>
+
+    <!-- Light Theme Surface & Background -->
+    <color name="bg_light">#F8FAFC</color>
     <color name="surface_light">#FFFFFF</color>
-    <color name="card_stroke_light">#E2E8F0</color>
+    <color name="surface_elevated_light">#F1F5F9</color>
+    <color name="card_light">#FFFFFF</color>
+    <color name="stroke_light">#E2E8F0</color>
     <color name="text_primary_light">#0F172A</color>
-    <color name="text_secondary_light">#64748B</color>
+    <color name="text_secondary_light">#475569</color>
+    <color name="text_muted_light">#94A3B8</color>
 
-    <color name="background_dark">#0F172A</color>
-    <color name="surface_dark">#1E293B</color>
-    <color name="card_stroke_dark">#334155</color>
-    <color name="text_primary_dark">#F8FAFC</color>
-    <color name="text_secondary_dark">#94A3B8</color>
+    <!-- Status & Verdict Colors -->
+    <color name="verdict_ok">#059669</color>
+    <color name="verdict_ok_bg">#D1FAE5</color>
+    <color name="verdict_wa">#DC2626</color>
+    <color name="verdict_wa_bg">#FEE2E2</color>
+    <color name="verdict_attempted">#D97706</color>
+    <color name="verdict_attempted_bg">#FEF3C7</color>
+    <color name="verdict_neutral">#64748B</color>
 
-    <!-- Status & Verdicts -->
-    <color name="verdict_ac">#10B981</color>
-    <color name="verdict_wa">#EF4444</color>
-    <color name="verdict_pending">#F59E0B</color>
-    <color name="coach_accent">#8B5CF6</color>
+    <!-- Codeforces Rank Palette -->
+    <color name="cf_gray">#808080</color>
+    <color name="cf_green">#008000</color>
+    <color name="cf_cyan">#03A89E</color>
+    <color name="cf_blue">#0000FF</color>
+    <color name="cf_violet">#AA00AA</color>
+    <color name="cf_orange">#FF8C00</color>
+    <color name="cf_red">#FF0000</color>
+    <color name="cf_legendary">#8B0000</color>
 
-    <!-- Platform branding -->
-    <color name="platform_codeforces">#3182CE</color>
-    <color name="platform_atcoder">#222222</color>
-    <color name="platform_leetcode">#FFA116</color>
-    <color name="platform_codechef">#5B4638</color>
+    <!-- Offline Banner -->
+    <color name="offline_banner_bg">#7F1D1D</color>
+    <color name="offline_banner_text">#FECACA</color>
 
+    <!-- Semantic Aliases (referenced by layouts; map to dark-theme values for default) -->
+    <color name="accent_amber">#FFBF00</color>
+    <color name="background_dark">@color/bg_dark</color>
+    <color name="text_primary">@color/text_primary_dark</color>
+    <color name="text_secondary">@color/text_secondary_dark</color>
+    <color name="text_muted">@color/text_muted_dark</color>
+    <color name="surface_card">@color/card_dark</color>
+    <color name="divider">@color/stroke_dark</color>
+    <color name="error">#DC2626</color>
+    <color name="error_container">#FEE2E2</color>
+
+    <!-- Transparent / Overlay -->
+    <color name="overlay_dim">#99000000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
-    <color name="gray_100">#F1F5F9</color>
-    <color name="gray_200">#E2E8F0</color>
-    <color name="gray_400">#94A3B8</color>
-    <color name="gray_600">#475569</color>
-    <color name="gray_800">#1E293B</color>
 
-    <!-- Competitive Programming Ratings -->
-    <color name="rating_newbie">#808080</color>
-    <color name="rating_pupil">#008000</color>
-    <color name="rating_specialist">#03A89E</color>
-    <color name="rating_expert">#0000FF</color>
-    <color name="rating_candidate_master">#AA00AA</color>
-    <color name="rating_master">#FF8C00</color>
-    <color name="rating_grandmaster">#FF0000</color>
+    <!-- Multi-Platform Contest Colors -->
+    <color name="platform_codeforces">#1E88E5</color>
+    <color name="platform_codeforces_bg">#1E3A8A</color>
+    <color name="platform_leetcode">#F59E0B</color>
+    <color name="platform_leetcode_bg">#78350F</color>
+    <color name="platform_atcoder">#8B5CF6</color>
+    <color name="platform_atcoder_bg">#4C1D95</color>
+    <color name="platform_codechef">#D97706</color>
+    <color name="platform_codechef_bg">#451A03</color>
+    <color name="platform_hackerrank">#10B981</color>
+    <color name="platform_hackerrank_bg">#064E3B</color>
 </resources>

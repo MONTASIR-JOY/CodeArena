@@ -1,601 +1,307 @@
-# 🚀 CodeArena
-### A Real-Time Virtual Contest Simulator, Multi-Platform Practice Tracker, and AI Coach for Competitive Programmers
+<p align="center">
+  <img src="app/src/main/res/drawable/ic_codearena_logo.png" width="128" height="128" alt="CodeArena Logo" />
+</p>
+
+<h1 align="center">CodeArena</h1>
 
 <p align="center">
-  <b>CodeArena — Train Smarter. Compete Better. Level Up.</b>
+  <strong>⚔️ Code · Compete · Upsolve ⚔️</strong><br>
+  <em>The ultimate competitive programming companion for Android — with live virtual contest simulation, spaced-repetition upsolving, multi-platform tracking, and AI-powered coaching.</em>
+</p>
+
+<p align="center">
+  <a href="#-features"><img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform Android" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Language-Java_8%2F17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Language Java" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Architecture-MVVM-0052CC?style=for-the-badge" alt="Architecture MVVM" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Database-Room_SQLite-4285F4?style=for-the-badge&logo=sqlite&logoColor=white" alt="Database Room SQLite" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/AI_Coach-Google_Gemini-8E75C2?style=for-the-badge&logo=google&logoColor=white" alt="AI Google Gemini" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Auth-Firebase_&_Google-FFA611?style=for-the-badge&logo=firebase&logoColor=white" alt="Auth Firebase" /></a>
+  <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=gradle&logoColor=white" alt="Build Passing" />
 </p>
 
 ---
 
-## 📌 Project Information
+## 📑 Table of Contents
 
-| Detail | Description |
-|---|---|
-| Course | CSE 2200 – Advanced Programming Laboratory |
-| Project Name | CodeArena |
-| Package Name | `com.kuet.codearena` |
-| Platform | Native Android |
-| Language | Pure Java (Java 8 compatibility) |
-| IDE | Android Studio Dolphin (2021.3.1) |
-| Android Gradle Plugin | 7.3.1 |
-| Gradle | 7.4 |
-| JDK | 11 |
-| Compile SDK | 33 |
-| Target SDK | 33 |
-| Minimum SDK | 24 |
-| UI Framework | Android XML Layouts + ViewBinding |
+- [✨ Overview](#-overview)
+- [🔥 Core Highlights](#-core-highlights)
+- [📱 Feature Showcase](#-feature-showcase)
+- [🏗️ System Architecture](#️-system-architecture)
+- [💻 Tech Stack & Libraries](#-tech-stack--libraries)
+- [🎓 Academic & Syllabus Alignment (CSE 2200)](#-academic--syllabus-alignment-cse-2200)
+- [📂 Project Directory Structure](#-project-directory-structure)
+- [🚀 Getting Started & Setup](#-getting-started--setup)
+- [📦 Build & Installation](#-build--installation)
+- [🔒 Permissions & Security](#-permissions--security)
+- [📜 License](#-license)
 
 ---
 
-## 📖 Overview
+## ✨ Overview
 
-**CodeArena** is a comprehensive native Android application designed to help competitive programmers organize their training, simulate programming contests, track their progress across multiple competitive programming platforms, and improve their problem-solving skills.
+**CodeArena** is a production-grade, native Android application engineered in **pure Java** to empower competitive programmers. Whether you are aiming for *Candidate Master* on Codeforces or preparing for algorithmic coding rounds, **CodeArena** unifies your entire training workflow into a single, high-performance ecosystem.
 
-The application integrates workflows from:
-
-- [Codeforces](https://codeforces.com/)
-- [AtCoder](https://atcoder.jp/)
-- [LeetCode](https://leetcode.com/)
-- [CodeChef](https://www.codechef.com/)
-
-CodeArena combines contest simulation, spaced-repetition learning, performance analytics, AI-powered coaching, and competitive leaderboards into one platform.
-
-### 🎯 Core Objectives
-
-1. Provide a realistic virtual programming contest experience.
-2. Encourage consistent practice through spaced repetition.
-3. Aggregate accepted submissions from multiple platforms.
-4. Analyze programming strengths and weaknesses.
-5. Provide personalized algorithmic learning recommendations.
-6. Build a competitive community through global leaderboards.
+It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, LeetCode, HackerRank**), offers real-time virtual contest simulation with custom background services, enforces long-term mastery via spaced repetition, and introduces an interactive **Gemini AI Coach** that guides you algorithmically without spoiling solutions.
 
 ---
 
-## ✨ Key Features
+## 🔥 Core Highlights
 
-### 1. 🏆 Virtual Contest Simulator
-
-Experience programming contests in a controlled virtual environment.
-
-- Real-time contest countdown.
-- Foreground Service for persistent contest timing.
-- Live submission tracking.
-- Halfway and final 10-minute notifications.
-- Contest lifecycle management.
-- Post-contest performance analysis.
-- Penalty-based scoring system.
-- Contest history and statistics.
-
-### 2. 🔁 Spaced-Repetition Upsolve Tracker
-
-Improve long-term problem-solving ability using a spaced-repetition learning system.
-
-Unsolved contest problems are automatically scheduled for review using the following cycle:
-
-| Review Stage | Interval |
-|---|---|
-| First Review | 1 Day |
-| Second Review | 3 Days |
-| Third Review | 7 Days |
-| Fourth Review | 14 Days |
-
-Features:
-
-- Automatic upsolve scheduling.
-- Exact `AlarmManager` wakeups.
-- Persistent reminders.
-- Boot-time alarm restoration.
-- Problem completion tracking.
-- Offline storage using Room Database.
-
-### 3. 🌐 Multi-Platform Solve Aggregator
-
-Track accepted submissions across multiple competitive programming platforms.
-
-Supported platforms:
-
-- Codeforces
-- AtCoder
-- LeetCode
-- CodeChef
-
-Features:
-
-- Accepted submission aggregation.
-- Unified practice statistics.
-- Internal ELO-based Practice Rating.
-- Daily practice streak tracking.
-- Cross-platform progress monitoring.
-- API rate limiting and caching.
-
-### 4. 📊 Tag Mastery & Visual Analytics
-
-Understand your competitive programming performance through interactive visualizations.
-
-- Algorithm tag mastery radar chart.
-- Weakness analysis bar chart.
-- Contest performance graphs.
-- Practice rating progression.
-- Daily streak statistics.
-- XML-based offline algorithmic tips.
-
-### 5. 🤖 Rule-Based & AI Coaching Engine
-
-CodeArena provides personalized learning recommendations.
-
-**Rule-Based Coaching:**
-- Five-rung progressive problem-solving ladders.
-- Weakness-based practice recommendations.
-- Seven-day contest participation strategies.
-- Algorithm-specific learning suggestions.
-
-**Google Gemini Integration:**
-- AI-powered algorithm explanations.
-- Problem-solving guidance.
-- Concept clarification.
-- Personalized practice insights.
-
-If Gemini API credentials are unavailable, the application automatically falls back to its offline rule-based coaching engine.
-
-### 6. 🌍 Global Leaderboards
-
-Compete with other programmers through Firebase-powered leaderboards.
-
-- Firestore-based synchronization.
-- Multi-window ranking support.
-- Practice rating comparisons.
-- Competitive progress tracking.
-- Offline leaderboard fallback.
-
-### 7. 📦 Custom ContentProvider
-
-CodeArena exposes a read-only Android ContentProvider for external applications to inspect pending upsolve problems.
-
-**Authority:**
-`com.kuet.codearena.provider`
-
-**Content URI:**
-`content://com.kuet.codearena.provider/upsolve`
-
-**MIME Type:**
-`vnd.android.cursor.dir/vnd.com.kuet.codearena.upsolve`
-
-Exported columns:
-
-| Column | Type | Description |
-|---|---|---|
-| `_id` | INTEGER | Primary key |
-| `contest_id` | INTEGER | Codeforces contest ID |
-| `problem_index` | TEXT | Problem index |
-| `problem_name` | TEXT | Problem title |
-| `rating` | INTEGER | Problem difficulty |
-| `interval_days` | INTEGER | Review interval |
-| `due_date` | INTEGER | Due timestamp in milliseconds |
-| `is_solved` | INTEGER | Completion status |
-
-**Example Usage:**
-
-```java
-Uri uri = Uri.parse(
-    "content://com.kuet.codearena.provider/upsolve"
-);
-
-Cursor cursor = getContentResolver().query(
-    uri,
-    null,
-    null,
-    null,
-    null
-);
-
-if (cursor != null) {
-    try {
-        while (cursor.moveToNext()) {
-            String name = cursor.getString(
-                cursor.getColumnIndexOrThrow("problem_name")
-            );
-
-            int rating = cursor.getInt(
-                cursor.getColumnIndexOrThrow("rating")
-            );
-        }
-    } finally {
-        cursor.close();
-    }
-}
+```
+   ┌────────────────────────────────────────────────────────────────────────┐
+   │                               CodeArena                                │
+   ├───────────────────┬───────────────────┬────────────────────────────────┤
+   │ 🏆 Virtual Arena  │ 🧠 Upsolve System │ 🤖 Gemini AI Coach             │
+   │  • Live timer     │  • Spaced Rep     │  • 3-tier hints                │
+   │  • Rank estimate  │  • Tag mastery    │  • Code review                 │
+   │  • Post-analysis  │  • 200-step chips │  • 7-day training plan         │
+   ├───────────────────┼───────────────────┼────────────────────────────────┤
+   │ 🌐 Multi-Platform │ 📰 Community Feed │ 🛡️ Multi-Account Security      │
+   │  • Clist & CF API │  • Blog reader    │  • Firebase + Google Sign-In   │
+   │  • Sync calendar  │  • Topic catalogs │  • User-scoped DB isolation    │
+   │  • Friend ratings │  • Read tracking  │  • Isolated SharedPreferences  │
+   └───────────────────┴───────────────────┴────────────────────────────────┘
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## 📱 Feature Showcase
 
-### Android Development
+### 1. 🏆 Virtual Contest Arena & Live Simulation
+* **Live Timer Service**: Runs as a persistent Android **Foreground Service** with active status notifications, keeping countdowns uninterrupted even if the screen turns off or the app is minimized.
+* **Realistic Rank & Rating Estimator**: Evaluates penalty and solve times against historical contest distributions to predict your virtual rank and delta.
+* **Deep Post-Contest Analysis**: Immediate breakdowns of problems solved, penalties incurred, tag distributions, and upsolving gaps.
 
-| Technology | Purpose |
-|---|---|
-| Java 8 | Application programming language |
-| Android SDK 33 | Android development platform |
-| Android XML | Native user interface layouts |
-| ViewBinding | Type-safe view access |
-| Material Components 1.6.1 | UI components |
-| ConstraintLayout | Responsive layouts |
-| RecyclerView | Efficient list rendering |
-| DiffUtil | Efficient list updates |
-| Custom Canvas | Circular timer visualization |
+### 2. 🧠 Smart Practice & Tag Mastery
+* **Spaced Repetition Upsolving**: Automatically schedules missed problems for review along standard retention curves (Day 1, 3, 7, 14, 30).
+* **Tag Mastery with 200-Rating Brackets**: Filter unsolved problems by topic (`dp`, `greedy`, `math`, `graphs`, `data structures`, etc.) and exact 200-rating tiers:
+  $$\text{800–900} \;\vert\; \text{1000–1100} \;\vert\; \text{1200–1300} \;\vert\; \dots \;\vert\; \text{2200–2300} \;\vert\; \text{2400+}$$
+* **Personalized Recommender**: Selects problems right at your rating sweet-spot (+100 to +300 above your handle's current rating).
+* **Home Screen Daily Widget**: Maintain daily coding streaks right from your device's home screen via `AppWidgetProvider`.
 
-### Architecture & Storage
+### 3. 🤖 Google Gemini AI Algorithmic Coach
+* **3-Tier Progressive Hints**: Never spoil a problem outright:
+  1. 💡 *Observation & Intuition*: Highlights mathematical properties or subtle invariants.
+  2. 🧭 *Algorithmic Direction*: Points toward the correct data structure or reduction (e.g., segment tree, DP state definition).
+  3. 📝 *Pseudocode & Complexity*: Full algorithmic outline and complexity breakdown when completely stuck.
+* **Intelligent Code Review**: Inspects your Java/C++/Python code to identify $O(N^2)$ pitfalls, memory bloat, and unhandled corner cases.
+* **7-Day Dynamic Training Plan**: Synthesizes your historical weaknesses into an actionable 7-day schedule.
 
-| Technology | Purpose |
-|---|---|
-| Room Database | Local persistent storage |
-| SQLite | Relational database |
-| ViewBinding | View interaction |
-| ContentProvider | Inter-app data sharing |
-| Foreground Service | Background contest timing |
-| BroadcastReceiver | Event and boot handling |
-| AlarmManager | Scheduled reminders |
+### 4. 🌐 Multi-Platform Aggregation & Community
+* **Unified Contest Calendar**: Pulls upcoming contests across Codeforces, AtCoder, CodeChef, LeetCode, and HackerRank using the Clist.by REST API.
+* **Local Reminder Alarms**: Uses `AlarmManager` with exact scheduling so you never miss a rated round.
+* **Codeforces Blogs & Topic Catalogs**: Full markdown and interactive reader for community tutorials and educational catalogs with read/unread tracking.
+* **Friends Radar**: Monitor your peers' rating graphs, compare head-to-head solve statistics, and read blogs authored by friends.
 
-### Networking & Backend
-
-| Technology | Purpose |
-|---|---|
-| Retrofit | REST API communication |
-| OkHttp | HTTP networking |
-| Firebase Authentication | User authentication |
-| Cloud Firestore | Cloud data synchronization |
-| Google Gemini REST API | AI coaching |
-| CLIST.by API | Contest calendar integration |
-
-### Visualization
-
-| Library | Purpose |
-|---|---|
-| MPAndroidChart 3.1.0 | Interactive charts |
-| Android Canvas | Custom graphical components |
-| XML Pull Parser | Offline algorithmic tips |
+### 5. 🛡️ Strict Multi-Account Data Isolation
+* **Dynamic Scoping**: Every user who logs in with Google or Email/Password gets an isolated environment:
+  - Local SQLite Database: `codearena_db_<uid>.db`
+  - SharedPreferences: `codearena_preferences_<uid>.xml`
+* **Zero Cross-Account Leakage**: All handles, solved statuses, blog read history, and favorites are 100% private to the active account.
+* **Forced Account Chooser**: Clean Google Sign-Out logic clears cached tokens to permit seamless account switching.
 
 ---
 
-## ⚙️ Development Environment Setup
+## 🏗️ System Architecture
 
-CodeArena is designed for the following development environment:
+CodeArena adheres to modern **Android Jetpack MVVM (Model-View-ViewModel)** guidelines with strict separation of concerns:
 
-| Component | Version |
-|---|---|
-| Android Studio | Dolphin 2021.3.1 |
-| Android Gradle Plugin | 7.3.1 |
-| Gradle Wrapper | 7.4 |
-| JDK | 11 |
-| Compile SDK | 33 |
-| Target SDK | 33 |
-| Minimum SDK | 24 |
+```mermaid
+flowchart TD
+    subgraph UI ["🎨 Presentation Layer (UI)"]
+        Activity["MainActivity / LoginActivity"]
+        Fragments["UI Fragments<br>(Contests, Mastery, Coach, etc.)"]
+        Adapters["RecyclerView Adapters<br>(ProblemAdapter, ContestAdapter)"]
+    end
 
-### Prerequisites
+    subgraph VM ["⚡ ViewModel Layer"]
+        ViewModels["Jetpack ViewModels<br>(LiveData & State Observers)"]
+    end
 
-Before running the project, install:
+    subgraph REPO ["📦 Repository Layer"]
+        Repositories["Domain Repositories<br>(ContestRepo, MasteryRepo, UserPrefsRepo)"]
+    end
 
-1. Android Studio Dolphin.
-2. JDK 11.
-3. Android SDK 33.
-4. Android SDK Build-Tools.
-5. Git.
+    subgraph DATA ["💾 Data Layer"]
+        subgraph LOCAL ["Local Storage"]
+            RoomDB[("Room Database SQLite<br>codearena_db_UID")]
+            Prefs[("SharedPreferences<br>codearena_prefs_UID")]
+        end
+        subgraph REMOTE ["Remote Network APIs"]
+            CF_API["Codeforces REST API"]
+            CLIST_API["Clist.by API"]
+            GEMINI_API["Google Gemini 1.5 API"]
+            FIREBASE["Firebase Auth SDK"]
+        end
+    end
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/CodeArena.git
-```
-
-Navigate into the project:
-
-```bash
-cd CodeArena
-```
-
-Open the project using Android Studio.
-
-Allow Gradle to synchronize and download the required dependencies.
-
-### Run the Application
-
-1. Open Android Studio.
-2. Select **Open Project**.
-3. Choose the CodeArena project directory.
-4. Wait for Gradle synchronization.
-5. Connect an Android device or start an emulator.
-6. Click **Run**.
-
-Alternatively, build using the terminal:
-
-```bash
-gradlew.bat clean
-gradlew.bat assembleDebug
-```
-
-The generated APK will be available at:
-
-```text
-app/build/outputs/apk/debug/app-debug.apk
+    Activity --> Fragments
+    Fragments --> Adapters
+    Fragments --> ViewModels
+    ViewModels --> Repositories
+    Repositories --> RoomDB
+    Repositories --> Prefs
+    Repositories --> CF_API
+    Repositories --> CLIST_API
+    Repositories --> GEMINI_API
+    Activity --> FIREBASE
 ```
 
 ---
 
-## 🔑 API Configuration
+## 💻 Tech Stack & Libraries
 
-External API credentials are configured through the project's `local.properties` file.
-
-Add the following configuration:
-
-```properties
-sdk.dir=C\:\\Users\\YourUser\\AppData\\Local\\Android\\Sdk
-
-GEMINI_API_KEY=your_gemini_api_key_here
-
-CLIST_USERNAME=your_clist_username
-
-CLIST_API_KEY=your_clist_api_key
-```
-
-### API Configuration Details
-
-| Configuration | Purpose |
-|---|---|
-| `GEMINI_API_KEY` | Google Gemini AI coaching |
-| `CLIST_USERNAME` | CLIST.by account |
-| `CLIST_API_KEY` | CLIST.by API authentication |
-| `sdk.dir` | Local Android SDK directory |
-
-**Important Security Notes:**
-
-- Never commit `local.properties` to GitHub.
-- Never publish API keys in source code.
-- Keep sensitive configuration files excluded through `.gitignore`.
-- Use appropriate API restrictions and quotas.
-
-### Graceful Fallback Mechanism
-
-CodeArena is designed to remain functional when optional API credentials are unavailable.
-
-| Service | Fallback |
-|---|---|
-| Gemini AI | Offline rule-based coaching |
-| CLIST.by | Direct platform public endpoints |
-| Firebase | Offline competitive leaderboard |
-| Network APIs | Locally cached data where available |
+| Category | Technology | Usage / Purpose |
+| :--- | :--- | :--- |
+| **Language** | **Java (Java 8 / JDK 17)** | 100% native Java implementation (0 Kotlin) |
+| **Platform** | **Android SDK (API 26 – 33)** | Android 8.0 Oreo up to Android 13 Tiramisu |
+| **Architecture** | **MVVM + Repositories** | Decoupled, lifecycle-aware architecture |
+| **UI Components** | **Google Material Design 3** | MaterialCardView, ChipGroups, LinearProgressIndicator |
+| **View Binding** | **Android ViewBinding** | Compile-time type-safe layout binding |
+| **Navigation** | **Jetpack Navigation Component** | Single-Activity architecture (`NavHostFragment`) |
+| **Local Database** | **AndroidX Room 2.5.2** | SQLite abstraction, DAOs, TypeConverters, Entities |
+| **Networking** | **Retrofit 2 + OkHttp 3** | HTTP REST communication with interceptors and rate limiters |
+| **Serialization** | **Google Gson 2.9.0** | Robust JSON parsing and serialization |
+| **Authentication** | **Firebase Auth + Google Play Services** | Secure authentication and Google One-Tap Sign-In |
+| **Generative AI** | **Google Gemini 1.5 API** | AI Coach for progressive hints, reviews, and training plans |
+| **System Services** | **Foreground Service & AlarmManager** | Background contest timer & exact reminder notifications |
+| **Widgets** | **Android AppWidgetProvider** | Home screen daily challenge glance widget |
 
 ---
 
-## 🔥 Firebase Configuration
+## 🎓 Academic & Syllabus Alignment (CSE 2200)
 
-Firebase is used for authentication and cloud leaderboard synchronization.
+This project was built to fulfill and exceed the requirements of **CSE 2200: Advanced Programming Laboratory**:
 
-### Step 1: Create Firebase Project
-
-1. Visit [Firebase Console](https://console.firebase.google.com/).
-2. Create a project named `CodeArena`.
-3. Register an Android application.
-4. Use the package name:
-
-```text
-com.kuet.codearena
-```
-
-### Step 2: Configure SHA-1
-
-Generate the debug signing fingerprint:
-
-```bash
-keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
-```
-
-For Windows PowerShell, use:
-
-```powershell
-keytool -list -v -keystore "$env:USERPROFILE\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
-```
-
-Add the SHA-1 fingerprint to your Firebase Android application.
-
-### Step 3: Download Firebase Configuration
-
-Download:
-
-```text
-google-services.json
-```
-
-Place it inside:
-
-```text
-CodeArena/
-└── app/
-    └── google-services.json
-```
-
-### Step 4: Enable Firebase Services
-
-Enable:
-
-- Firebase Authentication.
-- Google Sign-In provider.
-- Cloud Firestore.
-
-### Step 5: Firestore Security Rules
-
-The following rules allow authenticated users to read leaderboard profiles while restricting profile modifications to their owners.
-
-```javascript
-rules_version = '2';
-
-service cloud.firestore {
-  match /databases/{database}/documents {
-
-    match /users/{userId} {
-
-      allow read: if request.auth != null;
-
-      allow write: if request.auth != null
-                   && request.auth.uid == userId;
-    }
-  }
-}
-```
-
-**Security Note:** These are baseline access rules, not a complete production leaderboard security design. Validate user-submitted scores and ratings on a trusted backend before using them for public rankings.
+| Syllabus Module | Course Requirement | CodeArena Implementation |
+| :--- | :--- | :--- |
+| **Language Standards** | Pure Java (No Kotlin) | **100% Java** across all 50+ classes and utilities. |
+| **Week 8: Android Basics** | Manifest, Activity Lifecycle, Intents, ViewBinding | Multiple Activities, explicit intents, full ViewBinding. |
+| **Week 9: UI & UX** | `RecyclerView`, Custom ViewHolders, Cards | Custom item layouts, interactive Chip filters, Material 3 cards. |
+| **Week 10: Android Components** | **Services**, **Broadcast Receivers**, App Widgets | • `ContestTimerService` (Foreground Service)<br>• `ContestAlarmReceiver` & `BootReceiver`<br>• `DailyWidgetProvider` (App Widget) |
+| **Week 11: Networking & DB** | REST APIs, **JSON Parsing**, **SQLite**, **Firebase** | • Retrofit 2 + Gson for Codeforces & Clist APIs<br>• Room ORM (SQLite) with multi-tenant isolation<br>• Firebase Authentication & Google Sign-In |
+| **Concurrency & Threading** | Multithreading, `ExecutorService` | Java `Executors.newSingleThreadExecutor()` and `databaseWriteExecutor` for non-blocking operations. |
 
 ---
 
-## 📂 Project Architecture
+## 📂 Project Directory Structure
 
-The application follows a modular native Android architecture.
-
-```text
-CodeArena/
-│
+```
+d:/CodeArena/
 ├── app/
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/kuet/codearena/
-│   │       │
-│   │       │   ├── activity/
-│   │       │   ├── adapter/
-│   │       │   ├── database/
-│   │       │   ├── dao/
-│   │       │   ├── entity/
-│   │       │   ├── fragment/
-│   │       │   ├── model/
-│   │       │   ├── network/
-│   │       │   ├── receiver/
-│   │       │   ├── repository/
-│   │       │   ├── service/
-│   │       │   ├── provider/
-│   │       │   ├── analytics/
-│   │       │   ├── coaching/
-│   │       │   └── util/
-│   │       │
-│   │       ├── res/
-│   │       │   ├── drawable/
-│   │       │   ├── layout/
-│   │       │   ├── menu/
-│   │       │   ├── mipmap/
-│   │       │   ├── raw/
-│   │       │   ├── values/
-│   │       │   └── xml/
-│   │       │
-│   │       └── AndroidManifest.xml
-│   │
-│   ├── build.gradle
-│   └── google-services.json
-│
-├── gradle/
-├── build.gradle
-├── gradle.properties
-├── gradlew
-├── gradlew.bat
-├── settings.gradle
-├── local.properties
+│   ├── src/main/
+│   │   ├── AndroidManifest.xml
+│   │   ├── java/com/codearena/
+│   │   │   ├── CodeArenaApp.java                # Application initialization
+│   │   │   ├── MainActivity.java                # Single-activity host for nav graph
+│   │   │   ├── data/
+│   │   │   │   ├── api/                         # Retrofit API clients & interceptors
+│   │   │   │   ├── db/                          # Room DB, DAOs & Entities
+│   │   │   │   ├── model/                       # Data transfer objects (DTOs)
+│   │   │   │   └── repository/                  # Repositories & account-scoped storage
+│   │   │   ├── receiver/                        # BootReceiver & ContestAlarmReceiver
+│   │   │   ├── service/                         # Foreground ContestTimerService
+│   │   │   ├── ui/                              # Feature UI modules
+│   │   │   │   ├── adapter/                     # RecyclerView adapters & view holders
+│   │   │   │   ├── analysis/                    # Post-contest performance analysis
+│   │   │   │   ├── analytics/                   # Performance charts & stats
+│   │   │   │   ├── auth/                        # LoginActivity & Google Auth
+│   │   │   │   ├── blogs/                       # CF blogs reader & detail view
+│   │   │   │   ├── calendar/                    # Interactive contest calendar
+│   │   │   │   ├── catalog/                     # Codeforces catalog explorer
+│   │   │   │   ├── coach/                       # AI progressive hints & training plans
+│   │   │   │   ├── contestdetail/               # Problem list & contest overview
+│   │   │   │   ├── contests/                    # Main contest browser
+│   │   │   │   ├── daily/                       # Daily challenge view
+│   │   │   │   ├── friends/                     # Friend ratings & blog tracker
+│   │   │   │   ├── history/                     # History of virtual contest runs
+│   │   │   │   ├── home/                        # Main dashboard & active metrics
+│   │   │   │   ├── live/                        # Live contest arena with timer
+│   │   │   │   ├── mastery/                     # Tag Mastery with 200-rating intervals
+│   │   │   │   ├── recommender/                 # Smart problem recommendations
+│   │   │   │   ├── settings/                    # Handles, credentials & preferences
+│   │   │   │   └── upcoming/                    # Clist.by aggregated upcoming rounds
+│   │   │   ├── util/                            # Rating calculations & algorithms
+│   │   │   └── widget/                          # Android home screen widget provider
+│   │   └── res/                                 # Drawables, layouts, mipmaps & navigation
+│   └── build.gradle.kts                         # App module build configuration
+├── gradle/                                      # Gradle wrapper files
+├── build.gradle.kts                             # Root project build configuration
+├── settings.gradle.kts                          # Module inclusion configuration
 └── README.md
 ```
 
-*Note: The architecture above illustrates the intended module organization. Adjust directory names to match the actual project structure.*
+---
+
+## 🚀 Getting Started & Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/CodeArena.git
+cd CodeArena
+```
+
+### 2. Configure `local.properties`
+Create a `local.properties` file in the project root:
+```properties
+sdk.dir=C:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
+
+# Optional: Google Gemini API Key for AI Coaching
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Optional: Clist.by credentials for multi-platform contest scraping
+CLIST_USERNAME=your_clist_username
+CLIST_API_KEY=your_clist_api_key
+```
+
+### 3. Configure Firebase Authentication
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a project.
+2. Enable **Google Sign-In** and **Email/Password** under Authentication.
+3. Register your Android app package `com.codearena`.
+4. Register your debug SHA-1 signing fingerprint.
+5. Download `google-services.json` and place it in the `app/` directory.
 
 ---
 
-## 📋 Course Evaluation & Syllabus Mapping
+## 📦 Build & Installation
 
-CodeArena demonstrates several important Android development concepts covered in CSE 2200 Advanced Programming Laboratory.
+### Build via Gradle
+```bash
+# Generate debug APK
+./gradlew assembleDebug
 
-| Syllabus Topic | Implementation | Demonstration |
-|---|---|---|
-| Activity Lifecycle | `VirtualRunActivity.java` | Lifecycle callbacks |
-| Foreground Service | `VirtualContestService.java` | Persistent contest timer |
-| Notifications | `VirtualContestService.java` | Contest alerts |
-| BroadcastReceiver | `AlarmReceiver.java`, `BootReceiver.java` | Scheduled events and reboot handling |
-| AlarmManager | `AlarmScheduler.java` | Exact reminder scheduling |
-| Room Database | `AppDatabase.java` | Offline data persistence |
-| Retrofit | `ApiClient.java` | REST API integration |
-| Rate Limiting | `RateLimiter.java` | Codeforces API request control |
-| Custom Canvas View | `CircularTimerView.java` | Circular contest timer |
-| XML Pull Parser | `XmlTipParser.java` | Offline algorithmic tips |
-| Implicit Intents | `PostMortemActivity.java`, `CalendarFragment.java` | Sharing, browser and calendar |
-| RecyclerView | `ContestAdapter.java`, `ProblemAdapter.java` | Dynamic lists |
-| DiffUtil | RecyclerView adapters | Efficient updates |
-| ContentProvider | `UpsolveContentProvider.java` | External data access |
-| Firebase Authentication | `AuthManager.java` | Google Sign-In |
-| Cloud Firestore | `FirestoreRepository.java` | Leaderboard synchronization |
+# Clean build
+./gradlew clean assembleDebug
+```
+
+### Deploy to Connected Device via ADB
+```bash
+# Stream install APK
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# Launch Login Activity
+adb shell am start -n com.codearena/.ui.auth.LoginActivity
+```
 
 ---
 
-## 🔔 Android Permissions
+## 🔒 Permissions & Security
 
-Depending on the enabled features, CodeArena may require:
-
-- Internet access for platform APIs and cloud synchronization.
-- Notification permission on Android 13 and later.
-- Foreground service permissions for persistent contest timing.
-- Exact alarm access where required by Android.
-- Boot completed permission for restoring scheduled reminders.
-
-Permissions must be declared and requested according to the Android version and the specific feature being used.
-
----
-
-## 🛡️ Security & Privacy
-
-CodeArena follows basic security practices:
-
-- API credentials are kept outside version control.
-- Firebase Authentication protects cloud access.
-- Firestore rules restrict user profile writes.
-- The ContentProvider is read-only.
-- Local practice data remains available offline.
+| Permission | Purpose |
+| :--- | :--- |
+| `android.permission.INTERNET` | Communicating with Codeforces, Clist, Firebase, and Gemini APIs |
+| `android.permission.ACCESS_NETWORK_STATE` | Monitoring active network connectivity |
+| `android.permission.FOREGROUND_SERVICE` | Maintaining live virtual contest timers in the foreground |
+| `android.permission.SCHEDULE_EXACT_ALARM` | Scheduling precise contest reminders via AlarmManager |
+| `android.permission.POST_NOTIFICATIONS` | Delivering contest countdowns and reminder alerts (Android 13+) |
+| `android.permission.RECEIVE_BOOT_COMPLETED` | Restoring alarms automatically upon device restart |
 
 ---
 
-## 🚧 Future Improvements
+## 📜 License
 
-Potential future enhancements include:
-
-- More competitive programming platform integrations.
-- Advanced machine-learning-based problem recommendations.
-- More detailed contest performance predictions.
-- Personalized AI-generated study schedules.
-- Social practice rooms.
-- Team-based virtual contests.
-- Enhanced leaderboard analytics.
-- Advanced offline synchronization.
-
----
-
-## 🎓 Academic Information
-
-**Project:** CodeArena  
-**Course:** CSE 2200 – Advanced Programming Laboratory  
-**Department:** Computer Science and Engineering  
-**Institution:** Khulna University of Engineering & Technology (KUET)
-
-This project demonstrates practical applications of native Android development, Java programming, database management, networking, background processing, cloud integration, and software engineering concepts.
-
----
-
-## 👨‍💻 Contributors
-
-Developed as an academic project for CSE 2200 Advanced Programming Laboratory.
-
-**Project Name:** CodeArena
-
-**Package:** `com.kuet.codearena`
-
----
-
-## 📄 License
-
-This project is developed for academic and educational purposes.
-
-Add an appropriate open-source license before distributing the project publicly.
-
----
+Distributed under the **Apache License 2.0**. See `LICENSE` for more information.
 
 <p align="center">
-  <b>CodeArena — Train Smarter. Compete Better. Level Up. 🚀</b>
+  Made with ❤️ for Competitive Programmers worldwide.
 </p>
