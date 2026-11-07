@@ -1,5 +1,6 @@
 package com.codearena.data.repository;
 
+import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.lifecycle.LiveData;
@@ -17,6 +18,15 @@ import java.util.Set;
 public class UserPreferencesRepository {
 
     private static final String PREF_NAME_PREFIX = "codearena_preferences_";
+
+    private void requestBackup() {
+        if (context != null) {
+            try {
+                BackupManager backupManager = new BackupManager(context);
+                backupManager.dataChanged();
+            } catch (Exception ignored) {}
+        }
+    }
 
     // Preference keys
     public static final String KEY_HANDLE = "user_handle";
@@ -109,6 +119,7 @@ public class UserPreferencesRepository {
 
     public void saveHandle(String handle) {
         getPrefs().edit().putString(KEY_HANDLE, handle != null ? handle.trim() : "").apply();
+        requestBackup();
     }
 
     public LiveData<String> getHandleLiveData() {
@@ -121,6 +132,7 @@ public class UserPreferencesRepository {
 
     public void saveLeetCodeHandle(String handle) {
         getPrefs().edit().putString(KEY_HANDLE_LEETCODE, handle != null ? handle.trim() : "").apply();
+        requestBackup();
     }
 
     public LiveData<String> getLeetCodeHandleLiveData() {
@@ -133,6 +145,7 @@ public class UserPreferencesRepository {
 
     public void saveCodeChefHandle(String handle) {
         getPrefs().edit().putString(KEY_HANDLE_CODECHEF, handle != null ? handle.trim() : "").apply();
+        requestBackup();
     }
 
     public LiveData<String> getCodeChefHandleLiveData() {
@@ -145,6 +158,7 @@ public class UserPreferencesRepository {
 
     public void saveAtCoderHandle(String handle) {
         getPrefs().edit().putString(KEY_HANDLE_ATCODER, handle != null ? handle.trim() : "").apply();
+        requestBackup();
     }
 
     public LiveData<String> getAtCoderHandleLiveData() {
@@ -157,6 +171,7 @@ public class UserPreferencesRepository {
 
     public void saveHackerRankHandle(String handle) {
         getPrefs().edit().putString(KEY_HANDLE_HACKERRANK, handle != null ? handle.trim() : "").apply();
+        requestBackup();
     }
 
     public LiveData<String> getHackerRankHandleLiveData() {
@@ -374,6 +389,7 @@ public class UserPreferencesRepository {
             current.remove(String.valueOf(id));
         }
         getPrefs().edit().putStringSet(KEY_READ_CATALOG, current).apply();
+        requestBackup();
     }
 
     public Set<String> getReadBlogIds() {
@@ -392,6 +408,7 @@ public class UserPreferencesRepository {
             current.remove(String.valueOf(id));
         }
         getPrefs().edit().putStringSet(KEY_READ_BLOGS, current).apply();
+        requestBackup();
     }
 
     public String getCachedBlogsJson() {
