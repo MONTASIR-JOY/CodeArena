@@ -62,14 +62,9 @@ dependencies {
     // Firebase Analytics (example)
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
     // Google Sign‑In support
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-    // Add other Firebase SDKs as needed, e.g., Crashlytics, Auth, Firestore
-    // implementation("com.google.firebase:firebase-crashlytics-ktx")
-    // implementation("com.google.firebase:firebase-auth-ktx")
-    // Google Sign‑In support
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
-    // implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Core Android & UI
     implementation("androidx.appcompat:appcompat:1.6.1")

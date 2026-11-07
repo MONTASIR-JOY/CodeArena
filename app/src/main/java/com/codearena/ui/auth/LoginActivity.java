@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.codearena.MainActivity;
 import com.codearena.R;
+import com.codearena.data.repository.FirestoreSyncRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            goToMain();
+            FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
             return;
         }
 
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, pwd)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            goToMain();
+                            FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
                         } else {
                             String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                             Toast.makeText(this, "Login failed: " + msg, Toast.LENGTH_LONG).show();
@@ -165,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        goToMain();
+                        FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
                     } else {
                         String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                         Toast.makeText(this, "Firebase Auth failed: " + msg, Toast.LENGTH_LONG).show();

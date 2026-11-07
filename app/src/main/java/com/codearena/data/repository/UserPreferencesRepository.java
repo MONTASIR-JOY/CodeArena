@@ -25,6 +25,9 @@ public class UserPreferencesRepository {
                 BackupManager backupManager = new BackupManager(context);
                 backupManager.dataChanged();
             } catch (Exception ignored) {}
+            try {
+                FirestoreSyncRepository.uploadToFirestore(context);
+            } catch (Exception ignored) {}
         }
     }
 
