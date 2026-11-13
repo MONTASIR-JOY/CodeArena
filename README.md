@@ -222,9 +222,9 @@ flowchart TD
 | Category | Technology | Usage / Purpose |
 | :--- | :--- | :--- |
 | **Language** | **Java (Java 8 / JDK 17)** | 100% native Java implementation (0 Kotlin) |
-| **Platform** | **Android SDK (API 26 – 34)** | Android 8.0 Oreo up to Android 14 UpsideDownCake |
+| **Platform** | **Android SDK (API 26 – 35 / Android 15)** | Android 8.0 Oreo up to Android 15 with Edge-to-Edge support |
 | **Architecture** | **MVVM + Repositories** | Decoupled, lifecycle-aware architecture |
-| **UI Components** | **Google Material Design 3** | MaterialCardView, ChipGroups, LinearProgressIndicator |
+| **UI Design** | **Material 3 & Edge-to-Edge** | Unified bold typography (`sans-serif-black`), Edge-to-Edge insets, dynamic color |
 | **View Binding** | **Android ViewBinding** | Compile-time type-safe layout binding |
 | **Navigation** | **Jetpack Navigation Component** | Single-Activity architecture (`NavHostFragment`) |
 | **Local Database** | **AndroidX Room 2.5.2** | SQLite abstraction, DAOs, TypeConverters, Entities |
@@ -235,7 +235,7 @@ flowchart TD
 | **Generative AI** | **Google Gemini 1.5 API** | AI Coach for progressive hints, reviews, and training plans |
 | **System Services** | **Foreground Service & AlarmManager** | Background contest timer & exact reminder notifications |
 | **Content Provider** | **Android ContentProvider** | Inter-app data sharing via `CodeArenaContentProvider` |
-| **Widgets** | **Android AppWidgetProvider** | Home screen daily challenge glance widget |
+| **Widgets** | **Jetpack Glance & AppWidgetProvider** | Home screen daily challenge & upsolve target widgets |
 
 ---
 
