@@ -1,6 +1,5 @@
 package com.codearena.ui.auth;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.codearena.MainActivity;
 import com.codearena.R;
 import com.codearena.data.repository.FirestoreSyncRepository;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -76,45 +76,35 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // Generate 6-digit verification code
-            String verificationCode = String.valueOf((int) (Math.random() * 900000) + 100000);
-
-            // Show verification dialog where user enters the 6-digit code
-            EditText codeInput = new EditText(this);
-            codeInput.setHint("Enter 6-digit code");
-            codeInput.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Verify Gmail Ownership")
-                    .setMessage("We have sent a 6-digit verification code to " + email + ".\n\n(Test Code: " + verificationCode + ")")
-                    .setView(codeInput)
-                    .setPositiveButton("Verify & Register", (dialog, which) -> {
-                        String enteredCode = codeInput.getText().toString().trim();
-                        if (enteredCode.equals(verificationCode)) {
-                            // Code matches! Proceed with Firebase account creation
-                            auth.createUserWithEmailAndPassword(email, pwd)
-                                    .addOnCompleteListener(this, task -> {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(this, "Email verified & account created successfully!", Toast.LENGTH_LONG).show();
-                                            goToMain();
-                                        } else {
-                                            String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
-                                            Toast.makeText(this, "Register failed: " + msg, Toast.LENGTH_LONG).show();
-                                        }
-                                    });
+            auth.createUserWithEmailAndPassword(email, pwd)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            com.google.firebase.auth.FirebaseUser user = auth.getCurrentUser();
+                            if (user != null) {
+                                user.sendEmailVerification().addOnCompleteListener(verifyTask -> {
+                                    if (verifyTask.isSuccessful()) {
+                                        showVerificationDialog(user, email);
+                                    } else {
+                                        Toast.makeText(this, "Account created, but verification email failed to send.", Toast.LENGTH_LONG).show();
+                                        goToMain();
+                                    }
+                                });
+                            } else {
+                                goToMain();
+                            }
                         } else {
-                            Toast.makeText(this, "Invalid verification code. Registration cancelled.", Toast.LENGTH_LONG).show();
+                            String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                            Toast.makeText(this, "Register failed: " + msg, Toast.LENGTH_LONG).show();
                         }
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
+                    });
         });
 
         forgotTv.setOnClickListener(v -> {
             EditText input = new EditText(this);
             input.setHint("Enter your email");
             input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-            new AlertDialog.Builder(this)
+            input.setPadding(48, 32, 48, 32);
+            new MaterialAlertDialogBuilder(this)
                     .setTitle("Reset password")
                     .setView(input)
                     .setPositiveButton("Send", (dialog, which) -> {
@@ -123,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             auth.sendPasswordResetEmail(email)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(this, "Reset email sent", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this, "Reset email sent to " + email, Toast.LENGTH_SHORT).show();
                                         } else {
                                             String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                                             Toast.makeText(this, "Error: " + msg, Toast.LENGTH_LONG).show();
@@ -202,5 +192,35 @@ public class LoginActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void showVerificationDialog(com.google.firebase.auth.FirebaseUser user, String email) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Verify Your Email")
+                .setMessage("We have sent a verification link to " + email + ".\n\nPlease check your Gmail inbox, click the verification link, and then tap 'I've Verified' below.")
+                .setPositiveButton("I've Verified", (dialog, which) -> {
+                    user.reload().addOnCompleteListener(reloadTask -> {
+                        if (user.isEmailVerified()) {
+                            Toast.makeText(this, "Email verified successfully!", Toast.LENGTH_LONG).show();
+                            goToMain();
+                        } else {
+                            Toast.makeText(this, "Email not verified yet. Please check your inbox and click the link.", Toast.LENGTH_LONG).show();
+                            showVerificationDialog(user, email);
+                        }
+                    });
+                })
+                .setNeutralButton("Resend Link", (dialog, which) -> {
+                    user.sendEmailVerification().addOnCompleteListener(resendTask -> {
+                        if (resendTask.isSuccessful()) {
+                            Toast.makeText(this, "Verification link resent to " + email, Toast.LENGTH_SHORT).show();
+                        }
+                        showVerificationDialog(user, email);
+                    });
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    auth.signOut();
+                })
+                .setCancelable(false)
+                .show();
     }
 }
