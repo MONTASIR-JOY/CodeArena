@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -195,32 +196,46 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showVerificationDialog(com.google.firebase.auth.FirebaseUser user, String email) {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("Verify Your Email")
-                .setMessage("We have sent a verification link to " + email + ".\n\nPlease check your Gmail inbox, click the verification link, and then tap 'I've Verified' below.")
-                .setPositiveButton("I've Verified", (dialog, which) -> {
-                    user.reload().addOnCompleteListener(reloadTask -> {
-                        if (user.isEmailVerified()) {
-                            Toast.makeText(this, "Email verified successfully!", Toast.LENGTH_LONG).show();
-                            goToMain();
-                        } else {
-                            Toast.makeText(this, "Email not verified yet. Please check your inbox and click the link.", Toast.LENGTH_LONG).show();
-                            showVerificationDialog(user, email);
-                        }
-                    });
-                })
-                .setNeutralButton("Resend Link", (dialog, which) -> {
-                    user.sendEmailVerification().addOnCompleteListener(resendTask -> {
-                        if (resendTask.isSuccessful()) {
-                            Toast.makeText(this, "Verification link resent to " + email, Toast.LENGTH_SHORT).show();
-                        }
-                        showVerificationDialog(user, email);
-                    });
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    auth.signOut();
-                })
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_email_verification, null);
+        TextView subtitleTv = dialogView.findViewById(R.id.tvVerificationSubtitle);
+        subtitleTv.setText("We have sent a verification link to " + email + ". Please check your Gmail inbox, click the link, and tap below.");
+
+        androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setView(dialogView)
                 .setCancelable(false)
-                .show();
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+
+        dialogView.findViewById(R.id.btnVerified).setOnClickListener(v -> {
+            user.reload().addOnCompleteListener(reloadTask -> {
+                if (user.isEmailVerified()) {
+                    Toast.makeText(this, "Email verified successfully!", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                    goToMain();
+                } else {
+                    Toast.makeText(this, "Email not verified yet. Please check your inbox.", Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+
+        dialogView.findViewById(R.id.btnResend).setOnClickListener(v -> {
+            user.sendEmailVerification().addOnCompleteListener(resendTask -> {
+                if (resendTask.isSuccessful()) {
+                    Toast.makeText(this, "Verification link resent to " + email, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Failed to resend email.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        dialogView.findViewById(R.id.btnCancel).setOnClickListener(v -> {
+            auth.signOut();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }
