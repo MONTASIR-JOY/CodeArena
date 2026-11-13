@@ -64,4 +64,5 @@ No app test source files were present during the audit. Firebase Console data an
 - [x] Gradle unit-test task, debug APK, and release APK completed successfully. No app test source files were present.
 - [x] Android Studio deployed the debug app and reported success launching the default activity. A later UI hierarchy inspection timed out.
 - [ ] Verify the new profile schema against the configured Firebase project and deploy the checked-in rules; live project access was not available.
-- [ ] Publish the audited tree to the intended GitHub default branch.
+- [x] Published the audited project tree to GitHub `main` at commit `964f0a7`.
+- [ ] Verify the current profile schema in the configured Firebase project and publish the checked-in rules; this needs access to the Firebase project.
