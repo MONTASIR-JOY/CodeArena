@@ -78,8 +78,19 @@ public class LoginActivity extends AppCompatActivity {
             auth.createUserWithEmailAndPassword(email, pwd)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
-                            goToMain();
+                            if (auth.getCurrentUser() != null) {
+                                auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(verifyTask -> {
+                                    if (verifyTask.isSuccessful()) {
+                                        Toast.makeText(this, "Account created! Verification email sent to " + email, Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(this, "Account created, but verification email failed to send.", Toast.LENGTH_LONG).show();
+                                    }
+                                    goToMain();
+                                });
+                            } else {
+                                Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
+                                goToMain();
+                            }
                         } else {
                             String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                             Toast.makeText(this, "Register failed: " + msg, Toast.LENGTH_LONG).show();
