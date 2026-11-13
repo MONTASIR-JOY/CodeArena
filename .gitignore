@@ -11,3 +11,5 @@ local.properties
 build*.txt
 
 *.apk
+/app/google-services.json
+
