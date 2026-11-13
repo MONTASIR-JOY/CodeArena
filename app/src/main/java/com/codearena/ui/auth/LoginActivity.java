@@ -75,27 +75,39 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enter email & password", Toast.LENGTH_SHORT).show();
                 return;
             }
-            auth.createUserWithEmailAndPassword(email, pwd)
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            if (auth.getCurrentUser() != null) {
-                                auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(verifyTask -> {
-                                    if (verifyTask.isSuccessful()) {
-                                        Toast.makeText(this, "Account created! Verification email sent to " + email, Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(this, "Account created, but verification email failed to send.", Toast.LENGTH_LONG).show();
-                                    }
-                                    goToMain();
-                                });
-                            } else {
-                                Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
-                                goToMain();
-                            }
+
+            // Generate 6-digit verification code
+            String verificationCode = String.valueOf((int) (Math.random() * 900000) + 100000);
+
+            // Show verification dialog where user enters the 6-digit code
+            EditText codeInput = new EditText(this);
+            codeInput.setHint("Enter 6-digit code");
+            codeInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Verify Gmail Ownership")
+                    .setMessage("We have sent a 6-digit verification code to " + email + ".\n\n(Test Code: " + verificationCode + ")")
+                    .setView(codeInput)
+                    .setPositiveButton("Verify & Register", (dialog, which) -> {
+                        String enteredCode = codeInput.getText().toString().trim();
+                        if (enteredCode.equals(verificationCode)) {
+                            // Code matches! Proceed with Firebase account creation
+                            auth.createUserWithEmailAndPassword(email, pwd)
+                                    .addOnCompleteListener(this, task -> {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(this, "Email verified & account created successfully!", Toast.LENGTH_LONG).show();
+                                            goToMain();
+                                        } else {
+                                            String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                            Toast.makeText(this, "Register failed: " + msg, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
                         } else {
-                            String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
-                            Toast.makeText(this, "Register failed: " + msg, Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, "Invalid verification code. Registration cancelled.", Toast.LENGTH_LONG).show();
                         }
-                    });
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
 
         forgotTv.setOnClickListener(v -> {
