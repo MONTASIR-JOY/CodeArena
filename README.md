@@ -14,7 +14,6 @@
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Language-Java_8%2F17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Language Java" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Architecture-Activities_&_Fragments-0052CC?style=for-the-badge" alt="Single activity and fragments" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Database-Room_SQLite_&_Firestore-4285F4?style=for-the-badge&logo=firebase&logoColor=white" alt="Database Room SQLite and Firestore" /></a>
-  <a href="#-tech-stack"><img src="https://img.shields.io/badge/AI_Coach-Google_Gemini-8E75C2?style=for-the-badge&logo=google&logoColor=white" alt="AI Google Gemini" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Auth-Firebase_&_Google-FFA611?style=for-the-badge&logo=firebase&logoColor=white" alt="Auth Firebase" /></a>
   <a href="https://github.com/MONTASIR-JOY/CodeArena/actions/workflows/build-apk.yml"><img src="https://github.com/MONTASIR-JOY/CodeArena/actions/workflows/build-apk.yml/badge.svg" alt="Build APK workflow" /></a>
 </p>
@@ -44,7 +43,7 @@
 
 **CodeArena** is a native Android app written in Java. It combines contest discovery, virtual contest screens, problem practice, Codeforces community blogs, local progress tracking, and spaced-review planning.
 
-The app fetches public profile statistics from Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and CSES. It also includes Firebase Authentication, limited Cloud Firestore profile sync, and an optional Gemini-backed coach. See [Known implementation limits](#known-implementation-limits) and the [code audit](AUDIT_REPORT.md) for incomplete or security-sensitive areas.
+The app fetches public profile statistics from Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and CSES. It also includes Firebase Authentication and limited Cloud Firestore profile sync. See [Known implementation limits](#known-implementation-limits) and the [code audit](AUDIT_REPORT.md) for incomplete or security-sensitive areas.
 
 ---
 
@@ -55,7 +54,6 @@ The app fetches public profile statistics from Codeforces, LeetCode, CodeChef, A
 - Codeforces blogs with author/friend and read-status filters.
 - Local practice tracking, a spaced-review queue, and tag-based problem browsing.
 - Firebase sign-in and selected profile fields synchronized to Firestore.
-- Optional Gemini-backed coaching when an API key is configured.
 
 ---
 
@@ -72,21 +70,14 @@ The app fetches public profile statistics from Codeforces, LeetCode, CodeChef, A
 * **Personalized Recommender**: Selects problems right at your rating sweet-spot (+100 to +300 above your handle's current rating).
 * **Home screen widget**: A `RemoteViews` widget exists, but its progress currently uses placeholder text rather than the live daily solve count.
 
-### 3. 🤖 Google Gemini AI Algorithmic Coach
-* **Progressive hints** (Gemini 2.0 Flash, when configured):
-  1. 💡 *Observation & Intuition*: Highlights mathematical properties or subtle invariants.
-  2. 🧭 *Algorithmic Direction*: Points toward the correct data structure or reduction (e.g., segment tree, DP state definition).
-  3. 📝 *Pseudocode & Complexity*: Full algorithmic outline and complexity breakdown when completely stuck.
-* Coach output depends on the configured Gemini API key and current app implementation.
-
-### 4. 🌐 Multi-Platform Aggregation & Community
+### 3. 🌐 Multi-Platform Aggregation & Community
 * **Platform profile summaries**: Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and CSES. Available metrics vary by platform and public endpoint.
 * **Handle editing**: Update supported handles on Home or Settings; updates are sent to Firestore when signed in.
 * **Contest calendar**: Combines Codeforces and Clist-backed contest data. Reminders are scheduled for 30 minutes before a contest; Android may use an inexact alarm when exact-alarm access is unavailable.
 * **Codeforces Blogs & Topic Catalogs**: Full markdown and interactive reader for community tutorials and educational catalogs with read/unread tracking.
 * **Friends and blog filters**: Review friend-authored Codeforces blogs with read/unread filters.
 
-### 5. 🛡️ Multi-Account Isolation & Content Provider
+### 4. 🛡️ Multi-Account Isolation & Content Provider
 * **Dynamic Scoping**: Every user who logs in with Google or Email/Password gets an isolated environment:
   - Local SQLite Database: `codearena_db_<uid>.db`
   - SharedPreferences: `codearena_preferences_<uid>.xml`
@@ -118,7 +109,7 @@ The app uses an Activity and Fragment UI with repository and data layers. The au
 flowchart TD
     subgraph UI ["🎨 Presentation Layer (UI)"]
         Activity["MainActivity / LoginActivity"]
-        Fragments["UI Fragments<br>(Contests, Mastery, Coach, Home, Settings)"]
+        Fragments["UI Fragments<br>(Contests, Mastery, Home, Settings)"]
         Adapters["RecyclerView Adapters<br>(ProblemAdapter, ContestAdapter, etc.)"]
     end
 
@@ -140,7 +131,6 @@ flowchart TD
         subgraph REMOTE ["Remote Cloud Services"]
             CF_API["Codeforces REST API"]
             CLIST_API["Clist.by API"]
-            GEMINI_API["Google Gemini 2.0 Flash API"]
             FIREBASE_AUTH["Firebase Auth (Google & Email)"]
             FIRESTORE["Google Cloud Firestore<br>users/{uid}"]
         end
@@ -155,7 +145,6 @@ flowchart TD
     FirestoreSync --> FIRESTORE
     Repositories --> CF_API
     Repositories --> CLIST_API
-    Repositories --> GEMINI_API
     Activity --> FIREBASE_AUTH
     RoomDB --> ContentProv
 ```
@@ -174,10 +163,9 @@ flowchart TD
 | **Navigation** | **Jetpack Navigation Component** | Single-Activity architecture (`NavHostFragment`) |
 | **Local Database** | **AndroidX Room 2.5.2** | SQLite abstraction, DAOs, TypeConverters, Entities |
 | **Cloud Database** | **Google Cloud Firestore** | Sync for selected profile fields |
-| **Networking** | **Retrofit 2 + OkHttp 3** | HTTP REST communication with interceptors and rate limiters |
-| **Serialization** | **Google Gson 2.9.0** | Robust JSON parsing and serialization |
+| **Networking** | **Retrofit 2 + OkHttp 4** | HTTP REST communication with interceptors and rate limiters |
+| **Serialization** | **Google Gson 2.10.1** | JSON parsing and serialization |
 | **Authentication** | **Firebase Auth + Google Play Services** | Secure authentication and Google One-Tap Sign-In |
-| **Generative AI** | **Google Gemini 2.0 Flash API** | Optional AI Coach; credentials are only supported in local debug builds until a backend proxy exists |
 | **System Services** | **Foreground Service & AlarmManager** | Contest timer service is a scaffold; contest reminders can fall back to inexact alarms |
 | **Content Provider** | **Android ContentProvider** | Internal app provider for local records; not exported |
 | **Widgets** | **AppWidgetProvider / RemoteViews** | Home-screen widget currently displays placeholder progress |
@@ -225,7 +213,7 @@ d:/CodeArena/
 │   │   │   │   ├── blogs/                       # CF blogs reader & detail view
 │   │   │   │   ├── calendar/                    # Interactive contest calendar
 │   │   │   │   ├── catalog/                     # Codeforces catalog explorer
-│   │   │   │   ├── coach/                       # AI progressive hints & training plans
+│   │   │   │   ├── coach/                       # Unfinished prototype screens; not a supported feature
 │   │   │   │   ├── contestdetail/               # Problem list & contest overview
 │   │   │   │   ├── contests/                    # Main contest browser
 │   │   │   │   ├── daily/                       # Daily challenge view
@@ -258,15 +246,12 @@ cd CodeArena
 ```
 
 ### 2. Configure `local.properties`
-Create a `local.properties` file in the project root. Keys configured here are embedded in local debug APKs and can be extracted. Release builds and GitHub Actions builds leave these keys blank; use a trusted backend proxy before enabling Gemini/Clist credentials in a distributed release.
+Create a `local.properties` file in the project root. Clist credentials configured here are embedded in local debug APKs and can be extracted. Release builds and GitHub Actions builds leave these credentials blank; use a trusted backend proxy before enabling them in a distributed release.
 ```properties
 sdk.dir=C:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
 
 # Debug builds only. These values are embedded and extractable; never publish a debug APK containing real keys.
 # Release/CI builds intentionally leave provider keys blank.
-# Optional: Google Gemini API Key for AI Coaching
-GEMINI_API_KEY=your_gemini_api_key_here
-
 # Optional: Clist.by credentials for multi-platform contest scraping
 CLIST_USERNAME=your_clist_username
 CLIST_API_KEY=your_clist_api_key
@@ -305,7 +290,7 @@ adb shell monkey -p com.codearena 1
 
 | Permission | Purpose |
 | :--- | :--- |
-| `android.permission.INTERNET` | Communicating with Codeforces, Clist, Firebase, Cloud Firestore, and Gemini APIs |
+| `android.permission.INTERNET` | Communicating with coding platform APIs, Firebase, and Cloud Firestore |
 | `android.permission.ACCESS_NETWORK_STATE` | Monitoring active network connectivity |
 | `android.permission.FOREGROUND_SERVICE` | Foreground service declaration; timer behavior is currently a scaffold |
 | `android.permission.SCHEDULE_EXACT_ALARM` | Exact reminder scheduling when access is available; otherwise app can use an inexact alarm |
@@ -316,7 +301,8 @@ adb shell monkey -p com.codearena 1
 
 ## Known implementation limits
 
-- Provider API credentials are available only to local debug builds, where they remain extractable; release and CI APKs omit them. A backend proxy is needed to enable these services securely in releases.
+- Clist API credentials are available only to local debug builds, where they remain extractable; release and CI APKs omit them. A backend proxy is needed to enable this integration securely in releases.
+- Gemini coach code is an unfinished prototype, not a supported app feature. Distributed release and CI builds have no Gemini API key configured.
 - Firestore sync covers the profile fields listed above, not Room database records. Firebase Console data and deployed rules were not inspected in this static audit.
 - Milestone alerts, upsolve reminders, timer actions, and live widget progress are incomplete or unimplemented.
 - Destructive Room fallback is removed. Future schema changes need explicit Room migrations to keep existing data.
