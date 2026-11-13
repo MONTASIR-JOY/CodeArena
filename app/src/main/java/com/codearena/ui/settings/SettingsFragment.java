@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -134,19 +135,19 @@ public class SettingsFragment extends Fragment {
     }
 
     private void showHandleDialog(String platform, String hint, String currentHandle, OnHandleSavedListener listener) {
-        EditText input = new EditText(requireContext());
-        input.setHint(hint);
-        input.setText(currentHandle);
-        input.setSingleLine(true);
-        int padding = (int) (16 * getResources().getDisplayMetrics().density);
-        input.setPadding(padding, padding, padding, padding);
+        View dialogContent = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_single_text_input, null, false);
+        TextInputLayout inputLayout = dialogContent.findViewById(R.id.tilDialogInput);
+        TextInputEditText input = dialogContent.findViewById(R.id.etDialogInput);
+        inputLayout.setHint(hint);
+        input.setText(currentHandle != null ? currentHandle : "");
 
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(platform + " Handle")
                 .setMessage("Enter your official " + platform + " handle / username:")
-                .setView(input)
+                .setView(dialogContent)
                 .setPositiveButton("Save", (dialog, which) -> {
-                    String newHandle = input.getText().toString().trim();
+                    String newHandle = input.getText() != null ? input.getText().toString().trim() : "";
                     listener.onSaved(newHandle);
                     Toast.makeText(requireContext(), platform + " handle saved!", Toast.LENGTH_SHORT).show();
                 })

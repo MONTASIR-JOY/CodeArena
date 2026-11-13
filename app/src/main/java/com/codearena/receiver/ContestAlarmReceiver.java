@@ -21,10 +21,11 @@ public class ContestAlarmReceiver extends BroadcastReceiver {
     public static void scheduleContestReminder(Context context, long contestId, String contestName, long startTimeMillis) {
         if (context == null) return;
         try {
-            new UserPreferencesRepository(context).setContestReminderSet(contestId, true);
-
             AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            if (am == null) return;
+            if (am == null) {
+                new UserPreferencesRepository(context).setContestReminderSet(contestId, false);
+                return;
+            }
 
             long now = System.currentTimeMillis();
             long triggerAt = startTimeMillis - (30 * 60 * 1000L); // 30 minutes before
@@ -33,6 +34,7 @@ public class ContestAlarmReceiver extends BroadcastReceiver {
                 if (startTimeMillis > now) {
                     triggerAt = now + 5000L;
                 } else {
+                    new UserPreferencesRepository(context).setContestReminderSet(contestId, false);
                     return; // Contest already started or passed
                 }
             }
@@ -68,7 +70,9 @@ public class ContestAlarmReceiver extends BroadcastReceiver {
             } else {
                 am.set(AlarmManager.RTC_WAKEUP, triggerAt, pi);
             }
+            new UserPreferencesRepository(context).setContestReminderSet(contestId, true);
         } catch (Exception e) {
+            new UserPreferencesRepository(context).setContestReminderSet(contestId, false);
             Log.e(TAG, "Failed to schedule contest reminder for " + contestName, e);
         }
     }
@@ -104,6 +108,11 @@ public class ContestAlarmReceiver extends BroadcastReceiver {
             String name = intent.getStringExtra("contest_name");
             if (name == null || name.trim().isEmpty()) {
                 name = "Upcoming Contest";
+            }
+
+            if (!new UserPreferencesRepository(context).isNotificationsEnabled()) {
+                Log.i(TAG, "Contest reminders are disabled in settings; skipping notification");
+                return;
             }
 
             NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

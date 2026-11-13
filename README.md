@@ -6,17 +6,17 @@
 
 <p align="center">
   <strong>⚔️ Code · Compete · Upsolve ⚔️</strong><br>
-  <em>The ultimate competitive programming companion for Android — with live virtual contest simulation, spaced-repetition upsolving, multi-platform tracking, Cloud Firestore sync, and AI-powered coaching.</em>
+  <em>A Java Android companion for contest browsing, coding practice, profile statistics, community blogs, and spaced-review planning.</em>
 </p>
 
 <p align="center">
   <a href="#-features"><img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform Android" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Language-Java_8%2F17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Language Java" /></a>
-  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Architecture-MVVM-0052CC?style=for-the-badge" alt="Architecture MVVM" /></a>
+  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Architecture-Activities_&_Fragments-0052CC?style=for-the-badge" alt="Single activity and fragments" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Database-Room_SQLite_&_Firestore-4285F4?style=for-the-badge&logo=firebase&logoColor=white" alt="Database Room SQLite and Firestore" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/AI_Coach-Google_Gemini-8E75C2?style=for-the-badge&logo=google&logoColor=white" alt="AI Google Gemini" /></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Auth-Firebase_&_Google-FFA611?style=for-the-badge&logo=firebase&logoColor=white" alt="Auth Firebase" /></a>
-  <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=gradle&logoColor=white" alt="Build Passing" />
+  <a href="https://github.com/MONTASIR-JOY/CodeArena/actions/workflows/build-apk.yml"><img src="https://github.com/MONTASIR-JOY/CodeArena/actions/workflows/build-apk.yml/badge.svg" alt="Build APK workflow" /></a>
 </p>
 
 ---
@@ -34,139 +34,85 @@
 - [🚀 Getting Started & Setup](#-getting-started--setup)
 - [📦 Build & Installation](#-build--installation)
 - [🔒 Permissions & Security](#-permissions--security)
+- [Known implementation limits](#known-implementation-limits)
+- [Code audit](AUDIT_REPORT.md)
 - [📜 License](#-license)
 
 ---
 
 ## ✨ Overview
 
-**CodeArena** is a production-grade, native Android application engineered in **pure Java** to empower competitive programmers. Whether you are aiming for *Candidate Master* on Codeforces, solving algorithmic challenges on LeetCode, or preparing for high-stakes technical coding rounds, **CodeArena** unifies your entire training workflow into a single, high-performance ecosystem.
+**CodeArena** is a native Android app written in Java. It combines contest discovery, virtual contest screens, problem practice, Codeforces community blogs, local progress tracking, and spaced-review planning.
 
-It bridges multi-platform contest tracking (**Codeforces, AtCoder, CodeChef, LeetCode, HackerRank**), offers real-time virtual contest simulation with custom background services, enforces long-term mastery via spaced repetition, provides bidirectional **Cloud Firestore** profile synchronization, and introduces an interactive **Gemini AI Coach** that guides you algorithmically without spoiling solutions.
+The app fetches public profile statistics from Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and CSES. It also includes Firebase Authentication, limited Cloud Firestore profile sync, and an optional Gemini-backed coach. See [Known implementation limits](#known-implementation-limits) and the [code audit](AUDIT_REPORT.md) for incomplete or security-sensitive areas.
 
 ---
 
 ## 🔥 Core Highlights
 
-```
-   ┌────────────────────────────────────────────────────────────────────────┐
-   │                               CodeArena                                │
-   ├───────────────────┬───────────────────┬────────────────────────────────┤
-   │ 🏆 Virtual Arena  │ 🧠 Upsolve System │ 🤖 Gemini AI Coach             │
-   │  • Live timer     │  • Spaced Rep     │  • 3-tier hints                │
-   │  • Rank estimate  │  • Tag mastery    │  • Code review                 │
-   │  • Post-analysis  │  • 200-step chips │  • 7-day training plan         │
-   ├───────────────────┼───────────────────┼────────────────────────────────┤
-   │ 🌐 Multi-Platform │ ☁️ Cloud Sync     │ 🛡️ Multi-Account Security      │
-   │  • Clist & CF API │  • Firestore DB   │  • Firebase + Google Sign-In   │
-   │  • 5 platforms    │  • Live handles   │  • User-scoped DB isolation    │
-   │  • Solve counts   │  • Solve counts   │  • ContentProvider sharing     │
-   └───────────────────┴───────────────────┴────────────────────────────────┘
-```
+- Contest discovery and calendar views, including optional local reminders.
+- Profile rating and solved-count summaries from supported coding platforms.
+- Codeforces blogs with author/friend and read-status filters.
+- Local practice tracking, a spaced-review queue, and tag-based problem browsing.
+- Firebase sign-in and selected profile fields synchronized to Firestore.
+- Optional Gemini-backed coaching when an API key is configured.
 
 ---
 
 ## 📱 Feature Showcase
 
 ### 1. 🏆 Virtual Contest Arena & Live Simulation
-* **Live Timer Service**: Runs as a persistent Android **Foreground Service** (`ContestTimerService`) with notification tray updates and interactive actions, keeping countdowns uninterrupted even if the screen turns off or the app is minimized.
-* **Realistic Rank & Rating Estimator**: Evaluates penalty and solve times against historical contest distributions to predict your virtual rank and delta.
-* **Deep Post-Contest Analysis**: Immediate breakdowns of problems solved, penalties incurred, tag distributions, and upsolving gaps.
+* **Virtual contest screen**: Supports in-app contest practice and analysis. The declared `ContestTimerService` and timer action receiver are scaffolds; they do not currently implement a persistent countdown or working notification actions.
+* **Virtual contest practice**: Record and review practice runs. Timer and action support remains incomplete; see the audit.
 
 ### 2. 🧠 Smart Practice & Tag Mastery
-* **Spaced Repetition Upsolving**: Automatically schedules missed problems for review along standard retention curves (Day 1, 3, 7, 14, 30).
+* **Review queue**: Track problems for later review. Reminder and scheduling behavior has limitations described in the audit.
 * **Tag Mastery with 200-Rating Brackets**: Filter unsolved problems by topic (`dp`, `greedy`, `math`, `graphs`, `data structures`, etc.) and exact 200-rating tiers:
   $$\text{800–900} \;\vert\; \text{1000–1100} \;\vert\; \text{1200–1300} \;\vert\; \dots \;\vert\; \text{2200–2300} \;\vert\; \text{2400+}$$
 * **Personalized Recommender**: Selects problems right at your rating sweet-spot (+100 to +300 above your handle's current rating).
-* **Home Screen Daily Widget**: Maintain daily coding streaks right from your device's home screen via `AppWidgetProvider`.
+* **Home screen widget**: A `RemoteViews` widget exists, but its progress currently uses placeholder text rather than the live daily solve count.
 
 ### 3. 🤖 Google Gemini AI Algorithmic Coach
-* **3-Tier Progressive Hints**:
+* **Progressive hints** (Gemini 2.0 Flash, when configured):
   1. 💡 *Observation & Intuition*: Highlights mathematical properties or subtle invariants.
   2. 🧭 *Algorithmic Direction*: Points toward the correct data structure or reduction (e.g., segment tree, DP state definition).
   3. 📝 *Pseudocode & Complexity*: Full algorithmic outline and complexity breakdown when completely stuck.
-* **Intelligent Code Review**: Inspects your Java/C++/Python code to identify $O(N^2)$ pitfalls, memory bloat, and unhandled corner cases.
-* **7-Day Dynamic Training Plan**: Synthesizes your historical weaknesses into an actionable 7-day schedule.
+* Coach output depends on the configured Gemini API key and current app implementation.
 
 ### 4. 🌐 Multi-Platform Aggregation & Community
-* **Unified 5-Platform Support**: Track handles and live solve statistics across **Codeforces, LeetCode, CodeChef, AtCoder, and HackerRank**.
-* **1-Tap Handle Editing**: Tap any platform badge directly on the Home screen or in Settings to update your handle and instantly sync it to Cloud Firestore.
-* **Contest Calendar & Clist.by Integration**: Aggregates upcoming rated contests across competitive sites with local `AlarmManager` reminders.
+* **Platform profile summaries**: Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and CSES. Available metrics vary by platform and public endpoint.
+* **Handle editing**: Update supported handles on Home or Settings; updates are sent to Firestore when signed in.
+* **Contest calendar**: Combines Codeforces and Clist-backed contest data. Reminders are scheduled for 30 minutes before a contest; Android may use an inexact alarm when exact-alarm access is unavailable.
 * **Codeforces Blogs & Topic Catalogs**: Full markdown and interactive reader for community tutorials and educational catalogs with read/unread tracking.
-* **Friends Radar**: Monitor your peers' rating graphs, compare head-to-head solve statistics, and read blogs authored by friends.
+* **Friends and blog filters**: Review friend-authored Codeforces blogs with read/unread filters.
 
 ### 5. 🛡️ Multi-Account Isolation & Content Provider
 * **Dynamic Scoping**: Every user who logs in with Google or Email/Password gets an isolated environment:
   - Local SQLite Database: `codearena_db_<uid>.db`
   - SharedPreferences: `codearena_preferences_<uid>.xml`
-* **Auto-Migration**: Any handle entered in guest mode automatically migrates to your Google account upon sign-in.
-* **CodeArenaContentProvider**: Exposes structured inter-app URIs (`content://com.codearena.provider/contests`, `/problems`, `/virtual_runs`, `/upsolve`) using Android's native `ContentProvider` component.
+* Per-user local storage is selected based on the signed-in account. Guest data migration behavior depends on the current app flow.
+* **ContentProvider**: Structured URIs exist for local records, but the provider is now private to the app (`exported=false`).
 
 ---
 
 ## ☁️ Cloud Firestore & Firebase Integration
 
-CodeArena includes complete bidirectional synchronization with **Google Cloud Firestore** under collection `users/{uid}` via `FirestoreSyncRepository.java`.
+CodeArena syncs the signed-in profile to `users/{uid}` via `FirestoreSyncRepository.java`. Sync is limited to profile data and user preferences; Room records and API credentials are not uploaded.
 
-### Document Schema in Cloud Firestore
-```json
-{
-  "uid": "d98FhK2l9LmP4vQ...",
-  "email": "user@gmail.com",
-
-  "handles": {
-    "codeforces": "tourist",
-    "leetcode": "user_lc",
-    "codechef": "user_cc",
-    "atcoder": "chokudai",
-    "hackerrank": "user_hr"
-  },
-
-  "solvedCounts": {
-    "codeforces": 132,
-    "leetcode": 345,
-    "codechef": 85,
-    "atcoder": 48,
-    "hackerrank": 62
-  },
-
-  "codeforcesHandle": "tourist",
-  "leetcodeHandle": "user_lc",
-  "codechefHandle": "user_cc",
-  "atcoderHandle": "chokudai",
-  "hackerrankHandle": "user_hr",
-
-  "rating": 1640,
-  "readBlogIds": [101, 102],
-  "readCatalogIds": [1, 2],
-  "lastUpdated": 1731002594000
-}
-```
+The profile document stores all six platform handles and solved counts, current ratings (Codeforces, LeetCode, CodeChef, AtCoder), peak ratings (LeetCode, CodeChef, AtCoder), friends, blog/catalog read IDs, daily target, notification/theme settings, and an update timestamp. The app restores these fields at sign-in and keeps local profile changes synced. Failed reads now return a sync failure; only a successful read confirming a missing document initializes it.
 
 ### Automatic Sync Triggers
-* **On Sign-In / Login**: `pullFromFirestore()` automatically pulls and restores all 5 handles, solve counts, and reading progress.
-* **On Handle Update**: Tapping any platform badge on Home or updating in Settings triggers an immediate push to Firestore.
-* **On Daily Solve Count Refresh**: As live solve numbers update from platform APIs, Firestore is refreshed with `SetOptions.merge()`.
-* **On Rating Change**: When a new Codeforces rating is calculated after a contest, it is synced to Firestore.
+* **On Sign-In / Login**: the app restores the saved profile, or initializes it after a successful read confirms that no document exists.
+* **On Profile/Preference Changes**: configured handles, platform statistics, friends, reading state, and synced preferences are uploaded.
 
 ### Cloud Firestore Security Rules
-In the [Firebase Console](https://console.firebase.google.com/) under **Firestore Database → Rules**, publish:
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
-    }
-  }
-}
-```
+Publish the checked-in [`firestore.rules`](firestore.rules) to the target Firebase project. They restrict access to the authenticated owner's document and validate the profile schema, field types, handle lengths, counters, and collection sizes. Avoid replacing them with broad signed-in-user access.
 
 ---
 
 ## 🏗️ System Architecture
 
-CodeArena adheres to modern **Android Jetpack MVVM (Model-View-ViewModel)** guidelines with strict separation of concerns:
+The app uses an Activity and Fragment UI with repository and data layers. The audit found no Jetpack ViewModel classes, so this README does not describe the project as MVVM.
 
 ```mermaid
 flowchart TD
@@ -176,8 +122,8 @@ flowchart TD
         Adapters["RecyclerView Adapters<br>(ProblemAdapter, ContestAdapter, etc.)"]
     end
 
-    subgraph VM ["⚡ ViewModel Layer"]
-        ViewModels["Jetpack ViewModels<br>(LiveData & State Observers)"]
+    subgraph STATE ["⚡ UI State"]
+        UIState["Fragment-managed UI state<br>and LiveData observers"]
     end
 
     subgraph REPO ["📦 Repository Layer"]
@@ -194,7 +140,7 @@ flowchart TD
         subgraph REMOTE ["Remote Cloud Services"]
             CF_API["Codeforces REST API"]
             CLIST_API["Clist.by API"]
-            GEMINI_API["Google Gemini 1.5 API"]
+            GEMINI_API["Google Gemini 2.0 Flash API"]
             FIREBASE_AUTH["Firebase Auth (Google & Email)"]
             FIRESTORE["Google Cloud Firestore<br>users/{uid}"]
         end
@@ -202,8 +148,7 @@ flowchart TD
 
     Activity --> Fragments
     Fragments --> Adapters
-    Fragments --> ViewModels
-    ViewModels --> Repositories
+    Fragments --> Repositories
     Repositories --> RoomDB
     Repositories --> Prefs
     Repositories --> FirestoreSync
@@ -223,19 +168,19 @@ flowchart TD
 | :--- | :--- | :--- |
 | **Language** | **Java (Java 8 / JDK 17)** | 100% native Java implementation (0 Kotlin) |
 | **Platform** | **Android SDK (API 26 – 35 / Android 15)** | Android 8.0 Oreo up to Android 15 with Edge-to-Edge support |
-| **Architecture** | **MVVM + Repositories** | Decoupled, lifecycle-aware architecture |
+| **Architecture** | **Activity/Fragments + Repositories** | UI and data access organized across feature fragments and repositories |
 | **UI Design** | **Material 3 & Edge-to-Edge** | Unified bold typography (`sans-serif-black`), Edge-to-Edge insets, dynamic color |
 | **View Binding** | **Android ViewBinding** | Compile-time type-safe layout binding |
 | **Navigation** | **Jetpack Navigation Component** | Single-Activity architecture (`NavHostFragment`) |
 | **Local Database** | **AndroidX Room 2.5.2** | SQLite abstraction, DAOs, TypeConverters, Entities |
-| **Cloud Database** | **Google Cloud Firestore 24.11+** | Real-time cloud synchronization for handles, solve counts & bookmarks |
+| **Cloud Database** | **Google Cloud Firestore** | Sync for selected profile fields |
 | **Networking** | **Retrofit 2 + OkHttp 3** | HTTP REST communication with interceptors and rate limiters |
 | **Serialization** | **Google Gson 2.9.0** | Robust JSON parsing and serialization |
 | **Authentication** | **Firebase Auth + Google Play Services** | Secure authentication and Google One-Tap Sign-In |
-| **Generative AI** | **Google Gemini 1.5 API** | AI Coach for progressive hints, reviews, and training plans |
-| **System Services** | **Foreground Service & AlarmManager** | Background contest timer & exact reminder notifications |
-| **Content Provider** | **Android ContentProvider** | Inter-app data sharing via `CodeArenaContentProvider` |
-| **Widgets** | **Jetpack Glance & AppWidgetProvider** | Home screen daily challenge & upsolve target widgets |
+| **Generative AI** | **Google Gemini 2.0 Flash API** | Optional AI Coach; credentials are only supported in local debug builds until a backend proxy exists |
+| **System Services** | **Foreground Service & AlarmManager** | Contest timer service is a scaffold; contest reminders can fall back to inexact alarms |
+| **Content Provider** | **Android ContentProvider** | Internal app provider for local records; not exported |
+| **Widgets** | **AppWidgetProvider / RemoteViews** | Home-screen widget currently displays placeholder progress |
 
 ---
 
@@ -248,8 +193,8 @@ This project was built to fulfill and exceed the requirements of **CSE 2200: Adv
 | **Language Standards** | Pure Java (No Kotlin) | **100% Java** across all source files and repositories. |
 | **Lab 8: Android Basics & Navigation** | Manifest, Activity Lifecycle, Explicit/Implicit Intents, View Binding | • Multi-Activity navigation (`LoginActivity` ↔ `MainActivity`)<br>• Explicit and implicit intents for external links & sharing<br>• Type-safe Android View Binding used in 100% of layouts. |
 | **Lab 9: UI & Lists** | Layout Design, `RecyclerView`, Custom Adapters, ViewHolders | • `ConstraintLayout`, `LinearLayout`, `CoordinatorLayout`<br>• Dynamic lists with custom adapters (`ContestAdapter`, `ProblemAdapter`, `MasteryAdapter`, `FriendAdapter`, `BlogAdapter`, `UpcomingContestAdapter`). |
-| **Lab 10: Android Components** | **Services**, **Broadcast Receivers**, **Content Providers**, Permissions | • `ContestTimerService` (Foreground service with ongoing notification tray updates)<br>• `ContestAlarmReceiver`, `BootReceiver`, `TimerActionReceiver`<br>• `CodeArenaContentProvider` for structured content sharing<br>• Runtime permission handling (`POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`). |
-| **Lab 11: Networking & Databases** | REST APIs, **JSON Parsing**, **SQLite**, **Firebase Services** | • Retrofit 2 + Gson for external REST APIs (Codeforces & Clist.by)<br>• Room ORM (SQLite) with multi-account isolation (`codearena_db_<uid>.db`)<br>• **Firebase Authentication** (Google Sign-In & Email/Password)<br>• **Cloud Firestore** (`users/{uid}`) syncing 5-platform handles and solve counts. |
+| **Lab 10: Android Components** | **Services**, **Broadcast Receivers**, **Content Providers**, Permissions | • `ContestTimerService` scaffold<br>• `ContestAlarmReceiver` and `BootReceiver` for contest reminders<br>• Private `CodeArenaContentProvider` for app-owned records<br>• Runtime notification permission and exact-alarm access handling. |
+| **Lab 11: Networking & Databases** | REST APIs, **JSON Parsing**, **SQLite**, **Firebase Services** | • Retrofit and Gson for platform APIs<br>• Room ORM (SQLite) with per-user databases<br>• Firebase Authentication (Google Sign-In and Email/Password)<br>• Firestore sync for selected profile data. |
 | **Concurrency & Threading** | Multithreading, `ExecutorService` | Java `Executors.newSingleThreadExecutor()` and `databaseWriteExecutor` for non-blocking asynchronous operations. |
 
 ---
@@ -308,15 +253,17 @@ d:/CodeArena/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/MONTASIR-JOY/CodeArena.git
+git clone https://github.com/MONTASIR-JOY/CodeArena-kt.git
 cd CodeArena
 ```
 
 ### 2. Configure `local.properties`
-Create a `local.properties` file in the project root:
+Create a `local.properties` file in the project root. Keys configured here are embedded in local debug APKs and can be extracted. Release builds and GitHub Actions builds leave these keys blank; use a trusted backend proxy before enabling Gemini/Clist credentials in a distributed release.
 ```properties
 sdk.dir=C:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
 
+# Debug builds only. These values are embedded and extractable; never publish a debug APK containing real keys.
+# Release/CI builds intentionally leave provider keys blank.
 # Optional: Google Gemini API Key for AI Coaching
 GEMINI_API_KEY=your_gemini_api_key_here
 
@@ -329,16 +276,7 @@ CLIST_API_KEY=your_clist_api_key
 1. Open the [Firebase Console](https://console.firebase.google.com/) and create a project.
 2. Under **Authentication**, enable **Google Sign-In** and **Email/Password**.
 3. Under **Firestore Database**, create a database and publish the security rules:
-   ```javascript
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /{document=**} {
-         allow read, write: if request.auth != null;
-       }
-     }
-   }
-   ```
+   Publish the checked-in `firestore.rules` file. It validates the owner-scoped profile schema.
 4. Register your Android app package `com.codearena` and add your SHA-1 signing fingerprint.
 5. Download `google-services.json` and place it in the `app/` directory.
 
@@ -357,11 +295,8 @@ CLIST_API_KEY=your_clist_api_key
 
 ### Deploy to Connected Device via ADB
 ```bash
-# Stream install APK
 adb install -r app/build/outputs/apk/debug/app-debug.apk
-
-# Launch Login Activity
-adb shell am start -n com.codearena/.ui.auth.LoginActivity
+adb shell monkey -p com.codearena 1
 ```
 
 ---
@@ -372,16 +307,27 @@ adb shell am start -n com.codearena/.ui.auth.LoginActivity
 | :--- | :--- |
 | `android.permission.INTERNET` | Communicating with Codeforces, Clist, Firebase, Cloud Firestore, and Gemini APIs |
 | `android.permission.ACCESS_NETWORK_STATE` | Monitoring active network connectivity |
-| `android.permission.FOREGROUND_SERVICE` | Maintaining live virtual contest timers in the foreground |
-| `android.permission.SCHEDULE_EXACT_ALARM` | Scheduling precise contest reminders via AlarmManager |
+| `android.permission.FOREGROUND_SERVICE` | Foreground service declaration; timer behavior is currently a scaffold |
+| `android.permission.SCHEDULE_EXACT_ALARM` | Exact reminder scheduling when access is available; otherwise app can use an inexact alarm |
 | `android.permission.POST_NOTIFICATIONS` | Delivering contest countdowns and reminder alerts (Android 13+) |
 | `android.permission.RECEIVE_BOOT_COMPLETED` | Restoring alarms automatically upon device restart |
 
 ---
 
+## Known implementation limits
+
+- Provider API credentials are available only to local debug builds, where they remain extractable; release and CI APKs omit them. A backend proxy is needed to enable these services securely in releases.
+- Firestore sync covers the profile fields listed above, not Room database records. Firebase Console data and deployed rules were not inspected in this static audit.
+- Milestone alerts, upsolve reminders, timer actions, and live widget progress are incomplete or unimplemented.
+- Destructive Room fallback is removed. Future schema changes need explicit Room migrations to keep existing data.
+
+See [AUDIT_REPORT.md](AUDIT_REPORT.md) for evidence, impact, and recommended fixes.
+
+---
+
 ## 📜 License
 
-Distributed under the **Apache License 2.0**.
+No `LICENSE` file is currently checked into this repository. Add a license file before redistributing the project.
 
 <p align="center">
   Made with ❤️ for Competitive Programmers worldwide.

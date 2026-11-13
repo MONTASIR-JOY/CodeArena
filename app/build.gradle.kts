@@ -5,6 +5,7 @@ plugins {
 }
 
 apply(plugin = "com.google.gms.google-services")
+apply(plugin = "com.google.firebase.crashlytics")
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -27,13 +28,23 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
-        buildConfigField("String", "CLIST_USERNAME", "\"$clistUsername\"")
-        buildConfigField("String", "CLIST_API_KEY", "\"$clistApiKey\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"\"")
+        buildConfigField("String", "CLIST_USERNAME", "\"\"")
+        buildConfigField("String", "CLIST_API_KEY", "\"\"")
     }
 
     buildTypes {
+        debug {
+            // Local-only credentials are limited to debug builds. Never publish debug APKs.
+            buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+            buildConfigField("String", "CLIST_USERNAME", "\"$clistUsername\"")
+            buildConfigField("String", "CLIST_API_KEY", "\"$clistApiKey\"")
+        }
         release {
+            // API keys cannot be made secret in a client APK. Production features need a backend proxy.
+            buildConfigField("String", "GEMINI_API_KEY", "\"\"")
+            buildConfigField("String", "CLIST_USERNAME", "\"\"")
+            buildConfigField("String", "CLIST_API_KEY", "\"\"")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

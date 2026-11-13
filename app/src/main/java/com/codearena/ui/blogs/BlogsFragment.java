@@ -109,7 +109,7 @@ public class BlogsFragment extends Fragment {
             }
             blogAdapter.setFriendHandles(prefsRepo.getFriends());
             friendsBlogs.clear();
-            if (binding != null && binding.chipGroupBlogs.getCheckedChipId() == R.id.chipBlogFriends) {
+            if (binding != null && binding.chipBlogFriends.isChecked()) {
                 rebuildFriendSubChips();
                 loadFriendsBlogs(true);
             } else {
@@ -137,7 +137,7 @@ public class BlogsFragment extends Fragment {
         binding.swipeRefreshBlogs.setColorSchemeResources(R.color.primary);
         binding.swipeRefreshBlogs.setOnRefreshListener(() -> {
             displayedCount = PAGE_SIZE;
-            if (binding != null && binding.chipGroupBlogs.getCheckedChipId() == R.id.chipBlogFriends) {
+            if (binding != null && binding.chipBlogFriends.isChecked()) {
                 loadFriendsBlogs(true);
             } else {
                 loadBlogs(false);
@@ -145,7 +145,7 @@ public class BlogsFragment extends Fragment {
         });
         binding.btnRetryBlogs.setOnClickListener(v -> {
             displayedCount = PAGE_SIZE;
-            if (binding != null && binding.chipGroupBlogs.getCheckedChipId() == R.id.chipBlogFriends) {
+            if (binding != null && binding.chipBlogFriends.isChecked()) {
                 loadFriendsBlogs(true);
             } else {
                 loadBlogs(true);
@@ -175,23 +175,25 @@ public class BlogsFragment extends Fragment {
 
         binding.chipGroupBlogs.setOnCheckedStateChangeListener((group, checkedIds) -> {
             displayedCount = PAGE_SIZE;
-            int checkedId = binding.chipGroupBlogs.getCheckedChipId();
-            if (checkedId == R.id.chipBlogFriends) {
-                selectedFriendHandle = null;
-                binding.layoutFriendSelector.setVisibility(View.VISIBLE);
-                rebuildFriendSubChips();
-                if (friendsBlogs.isEmpty()) {
-                    loadFriendsBlogs(false);
-                    return;
-                }
-            } else {
-                binding.layoutFriendSelector.setVisibility(View.GONE);
-            }
             applyFilters();
         });
 
         binding.chipGroupBlogReadStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
             displayedCount = PAGE_SIZE;
+            applyFilters();
+        });
+
+        binding.chipBlogFriends.setOnCheckedChangeListener((button, isChecked) -> {
+            displayedCount = PAGE_SIZE;
+            selectedFriendHandle = null;
+            binding.layoutFriendSelector.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            if (isChecked) {
+                rebuildFriendSubChips();
+                if (friendsBlogs.isEmpty()) {
+                    loadFriendsBlogs(false);
+                    return;
+                }
+            }
             applyFilters();
         });
     }
@@ -382,8 +384,9 @@ public class BlogsFragment extends Fragment {
             return;
 
         int checkedId = binding.chipGroupBlogs.getCheckedChipId();
+        int readFilterId = binding.chipGroupBlogReadStatus.getCheckedChipId();
         List<CfBlogEntry> workingList;
-        boolean isFriendsFilter = (checkedId == R.id.chipBlogFriends);
+        boolean isFriendsFilter = binding.chipBlogFriends.isChecked();
         Set<String> friends = prefsRepo.getFriends();
 
         if (isFriendsFilter) {
@@ -447,7 +450,6 @@ public class BlogsFragment extends Fragment {
         }
 
         // Filter: Read status
-        int readFilterId = binding.chipGroupBlogReadStatus.getCheckedChipId();
         Set<String> readIds = prefsRepo.getReadBlogIds();
         List<CfBlogEntry> readFiltered = new ArrayList<>();
         for (CfBlogEntry b : workingList) {
@@ -556,7 +558,7 @@ public class BlogsFragment extends Fragment {
         if (blogAdapter != null && prefsRepo != null && binding != null) {
             blogAdapter.setReadBlogIds(prefsRepo.getReadBlogIds());
             blogAdapter.setFriendHandles(prefsRepo.getFriends());
-            if (binding.chipGroupBlogs.getCheckedChipId() == R.id.chipBlogFriends) {
+            if (binding.chipBlogFriends.isChecked()) {
                 binding.layoutFriendSelector.setVisibility(View.VISIBLE);
                 rebuildFriendSubChips();
             } else {
@@ -602,7 +604,7 @@ public class BlogsFragment extends Fragment {
                         chipGroup.removeView(chip);
                         blogAdapter.setFriendHandles(prefsRepo.getFriends());
                         friendsBlogs.clear();
-                        if (binding != null && binding.chipGroupBlogs.getCheckedChipId() == R.id.chipBlogFriends) {
+                        if (binding != null && binding.chipBlogFriends.isChecked()) {
                             rebuildFriendSubChips();
                             loadFriendsBlogs(true);
                         } else {
@@ -627,7 +629,7 @@ public class BlogsFragment extends Fragment {
                 refreshChips.run();
                 blogAdapter.setFriendHandles(prefsRepo.getFriends());
                 friendsBlogs.clear();
-                if (binding != null && binding.chipGroupBlogs.getCheckedChipId() == R.id.chipBlogFriends) {
+                if (binding != null && binding.chipBlogFriends.isChecked()) {
                     rebuildFriendSubChips();
                     loadFriendsBlogs(true);
                 } else {

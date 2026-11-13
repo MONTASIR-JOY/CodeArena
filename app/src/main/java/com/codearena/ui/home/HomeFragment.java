@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -270,6 +271,21 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void updateCompetitivePlatformPillDisplay(String handle, int rating, int maxRating,
+                                                       int solvedCount, TextView textView) {
+        if (handle == null || handle.trim().isEmpty()) {
+            textView.setText("+ Add");
+            return;
+        }
+        String solvedText = solvedCount + " solved";
+        if (rating > 0) {
+            String maxText = maxRating > 0 ? String.valueOf(maxRating) : "—";
+            textView.setText(rating + " / " + maxText + " max · " + solvedText);
+        } else {
+            textView.setText(solvedText);
+        }
+    }
+
     private void renderLinkedHandles() {
         String lc = prefsRepo.getLeetCodeHandle();
         String cses = prefsRepo.getCsesHandle();
@@ -277,10 +293,13 @@ public class HomeFragment extends Fragment {
         String ac = prefsRepo.getAtCoderHandle();
         String hr = prefsRepo.getHackerRankHandle();
 
-        updatePlatformPillDisplay(lc, prefsRepo.getLeetCodeSolvedCount(), binding.tvHomeLeetCode);
+        updateCompetitivePlatformPillDisplay(lc, prefsRepo.getLeetCodeRating(), prefsRepo.getLeetCodeMaxRating(),
+                prefsRepo.getLeetCodeSolvedCount(), binding.tvHomeLeetCode);
         updatePlatformPillDisplay(cses, prefsRepo.getCsesSolvedCount(), binding.tvHomeCses);
-        updatePlatformPillDisplay(cc, prefsRepo.getCodeChefSolvedCount(), binding.tvHomeCodeChef);
-        updatePlatformPillDisplay(ac, prefsRepo.getAtCoderSolvedCount(), binding.tvHomeAtCoder);
+        updateCompetitivePlatformPillDisplay(cc, prefsRepo.getCodeChefRating(), prefsRepo.getCodeChefMaxRating(),
+                prefsRepo.getCodeChefSolvedCount(), binding.tvHomeCodeChef);
+        updateCompetitivePlatformPillDisplay(ac, prefsRepo.getAtCoderRating(), prefsRepo.getAtCoderMaxRating(),
+                prefsRepo.getAtCoderSolvedCount(), binding.tvHomeAtCoder);
         updatePlatformPillDisplay(hr, prefsRepo.getHackerRankSolvedCount(), binding.tvHomeHackerRank);
 
         binding.pillLeetCode.setOnClickListener(v ->
@@ -316,19 +335,19 @@ public class HomeFragment extends Fragment {
 
     private void showHandleDialog(String platform, String hint, String currentHandle, OnHandleSavedListener listener) {
         if (!isAdded()) return;
-        EditText input = new EditText(requireContext());
-        input.setHint(hint);
+        View dialogContent = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_single_text_input, null, false);
+        TextInputLayout inputLayout = dialogContent.findViewById(R.id.tilDialogInput);
+        TextInputEditText input = dialogContent.findViewById(R.id.etDialogInput);
+        inputLayout.setHint(hint);
         input.setText(currentHandle != null ? currentHandle : "");
-        input.setSingleLine(true);
-        int padding = (int) (16 * getResources().getDisplayMetrics().density);
-        input.setPadding(padding, padding, padding, padding);
 
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(platform + " Handle")
                 .setMessage("Enter your official " + platform + " handle / username:")
-                .setView(input)
+                .setView(dialogContent)
                 .setPositiveButton("Save", (dialog, which) -> {
-                    String newHandle = input.getText().toString().trim();
+                    String newHandle = input.getText() != null ? input.getText().toString().trim() : "";
                     listener.onSaved(newHandle);
                     Toast.makeText(requireContext(), platform + " handle saved & synced!", Toast.LENGTH_SHORT).show();
                 })
@@ -581,15 +600,15 @@ public class HomeFragment extends Fragment {
         // Fetch real solve counts for platforms
         String lcHandle = prefsRepo.getLeetCodeHandle();
         if (!lcHandle.isEmpty()) {
-            fetchLeetCodeSolvedCount(lcHandle);
+            fetchLeetCodeStats(lcHandle);
         }
         String ccHandle = prefsRepo.getCodeChefHandle();
         if (!ccHandle.isEmpty()) {
-            fetchCodeChefSolvedCount(ccHandle);
+            fetchCodeChefStats(ccHandle);
         }
         String acHandle = prefsRepo.getAtCoderHandle();
         if (!acHandle.isEmpty()) {
-            fetchAtCoderSolvedCount(acHandle);
+            fetchAtCoderStats(acHandle);
         }
         String hrHandle = prefsRepo.getHackerRankHandle();
         if (!hrHandle.isEmpty()) {
@@ -607,9 +626,12 @@ public class HomeFragment extends Fragment {
         int csesCount = prefsRepo.getCsesSolvedCount();
         requireActivity().runOnUiThread(() -> {
             if (isAdded()) {
-                updatePlatformPillDisplay(lcHandle, lcCount, binding.tvHomeLeetCode);
-                updatePlatformPillDisplay(ccHandle, ccCount, binding.tvHomeCodeChef);
-                updatePlatformPillDisplay(acHandle, acCount, binding.tvHomeAtCoder);
+                updateCompetitivePlatformPillDisplay(lcHandle, prefsRepo.getLeetCodeRating(),
+                        prefsRepo.getLeetCodeMaxRating(), lcCount, binding.tvHomeLeetCode);
+                updateCompetitivePlatformPillDisplay(ccHandle, prefsRepo.getCodeChefRating(),
+                        prefsRepo.getCodeChefMaxRating(), ccCount, binding.tvHomeCodeChef);
+                updateCompetitivePlatformPillDisplay(acHandle, prefsRepo.getAtCoderRating(),
+                        prefsRepo.getAtCoderMaxRating(), acCount, binding.tvHomeAtCoder);
                 updatePlatformPillDisplay(hrHandle, hrCount, binding.tvHomeHackerRank);
                 updatePlatformPillDisplay(csesHandle, csesCount, binding.tvHomeCses);
             }
@@ -689,146 +711,200 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void fetchLeetCodeSolvedCount(String handle) {
+    private void fetchLeetCodeStats(String handle) {
         new Thread(() -> {
+            HttpURLConnection conn = null;
             try {
                 URL url = new URL("https://leetcode.com/graphql");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                conn.setConnectTimeout(8000);
-                conn.setReadTimeout(8000);
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
                 conn.setDoOutput(true);
 
                 JSONObject payload = new JSONObject();
-                payload.put("query", "query getUserProfile($username: String!) { matchedUser(username: $username) { submitStatsGlobal { acSubmissionNum { difficulty count } } } }");
+                payload.put("query", "query getUserProfile($username: String!) { matchedUser(username: $username) { submitStatsGlobal { acSubmissionNum { difficulty count } } } userContestRanking(username: $username) { rating } userContestRankingHistory(username: $username) { rating } }");
                 JSONObject variables = new JSONObject();
                 variables.put("username", handle);
                 payload.put("variables", variables);
-
-                byte[] out = payload.toString().getBytes(StandardCharsets.UTF_8);
                 try (OutputStream os = conn.getOutputStream()) {
-                    os.write(out);
+                    os.write(payload.toString().getBytes(StandardCharsets.UTF_8));
                 }
 
-                int responseCode = conn.getResponseCode();
-                if (responseCode == 200) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    in.close();
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) return;
+                String body = readConnectionBody(conn);
+                JSONObject data = new JSONObject(body).optJSONObject("data");
+                if (data == null) return;
+                JSONObject matchedUser = data.optJSONObject("matchedUser");
+                if (matchedUser == null) return;
 
-                    JSONObject res = new JSONObject(sb.toString());
-                    JSONObject data = res.optJSONObject("data");
-                    if (data != null) {
-                        JSONObject matchedUser = data.optJSONObject("matchedUser");
-                        if (matchedUser != null) {
-                            JSONObject submitStats = matchedUser.optJSONObject("submitStatsGlobal");
-                            if (submitStats != null) {
-                                JSONArray acList = submitStats.optJSONArray("acSubmissionNum");
-                                if (acList != null) {
-                                    int totalSolved = 0;
-                                    for (int i = 0; i < acList.length(); i++) {
-                                        JSONObject item = acList.getJSONObject(i);
-                                        if ("All".equalsIgnoreCase(item.optString("difficulty"))) {
-                                            totalSolved = item.optInt("count", 0);
-                                            break;
-                                        }
-                                    }
-                                    final int solved = totalSolved;
-                                    prefsRepo.saveLeetCodeSolvedCount(solved);
-                                    requireActivity().runOnUiThread(() -> {
-                                        if (isAdded()) {
-                                            updatePlatformPillDisplay(handle, solved, binding.tvHomeLeetCode);
-                                        }
-                                    });
-                                }
-                            }
+                JSONObject submitStats = matchedUser.optJSONObject("submitStatsGlobal");
+                JSONArray accepted = submitStats != null ? submitStats.optJSONArray("acSubmissionNum") : null;
+                if (accepted == null) return;
+                int solved = 0;
+                for (int i = 0; i < accepted.length(); i++) {
+                    JSONObject item = accepted.optJSONObject(i);
+                    if (item != null && "All".equalsIgnoreCase(item.optString("difficulty"))) {
+                        solved = item.optInt("count", 0);
+                        break;
+                    }
+                }
+
+                JSONObject contest = data.optJSONObject("userContestRanking");
+                int rating = contest != null ? (int) Math.round(contest.optDouble("rating", 0)) : 0;
+                int maxRating = rating;
+                JSONArray history = data.optJSONArray("userContestRankingHistory");
+                if (history != null) {
+                    for (int i = 0; i < history.length(); i++) {
+                        JSONObject entry = history.optJSONObject(i);
+                        if (entry != null && entry.optBoolean("attended", true)) {
+                            maxRating = Math.max(maxRating, (int) Math.round(entry.optDouble("rating", 0)));
                         }
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
 
-    private void fetchCodeChefSolvedCount(String handle) {
-        new Thread(() -> {
-            try {
-                URL url = new URL("https://www.codechef.com/users/" + handle);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                conn.setConnectTimeout(8000);
-                conn.setReadTimeout(8000);
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode == 200) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    in.close();
-
-                    String html = sb.toString();
-                    Pattern p = Pattern.compile("(?:Total Problems Solved|Problems Solved)[^0-9]{0,50}(\\d+)", Pattern.CASE_INSENSITIVE);
-                    Matcher m = p.matcher(html);
-                    if (m.find()) {
-                        int solved = Integer.parseInt(m.group(1));
-                        prefsRepo.saveCodeChefSolvedCount(solved);
-                        requireActivity().runOnUiThread(() -> {
-                            if (isAdded()) {
-                                updatePlatformPillDisplay(handle, solved, binding.tvHomeCodeChef);
-                            }
-                        });
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-    private void fetchAtCoderSolvedCount(String handle) {
-        new Thread(() -> {
-            try {
-                URL url = new URL("https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=" + handle);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-                conn.setConnectTimeout(8000);
-                conn.setReadTimeout(8000);
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode == 200) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    in.close();
-
-                    JSONObject obj = new JSONObject(sb.toString());
-                    int solved = obj.optInt("count", 0);
-                    prefsRepo.saveAtCoderSolvedCount(solved);
-                    requireActivity().runOnUiThread(() -> {
-                        if (isAdded()) {
-                            updatePlatformPillDisplay(handle, solved, binding.tvHomeAtCoder);
+                prefsRepo.saveLeetCodeSolvedCount(solved);
+                prefsRepo.saveLeetCodeRatings(rating, maxRating);
+                android.app.Activity activity = getActivity();
+                if (activity != null) {
+                    final int finalSolved = solved;
+                    final int finalRating = rating;
+                    final int finalMaxRating = maxRating;
+                    activity.runOnUiThread(() -> {
+                        if (isAdded() && binding != null) {
+                            updateCompetitivePlatformPillDisplay(handle, finalRating, finalMaxRating,
+                                    finalSolved, binding.tvHomeLeetCode);
                         }
                     });
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                android.util.Log.w("HomeFragment", "Could not load LeetCode stats for " + handle, e);
+            } finally {
+                if (conn != null) conn.disconnect();
             }
         }).start();
+    }
+
+    private void fetchCodeChefStats(String handle) {
+        new Thread(() -> {
+            HttpURLConnection conn = null;
+            try {
+                String encodedHandle = java.net.URLEncoder.encode(handle, StandardCharsets.UTF_8.name());
+                URL url = new URL("https://www.codechef.com/users/" + encodedHandle);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) return;
+
+                String html = readConnectionBody(conn);
+                int rating = extractHtmlInt(html,
+                        "class=[\\\"'][^\\\"']*rating-number[^\\\"']*[\\\"'][^>]*>\\s*(\\d+)");
+                int maxRating = extractHtmlInt(html, "Highest Rating\\D{0,40}(\\d+)");
+                int solved = extractHtmlInt(html,
+                        "(?:Total Problems Solved|Problems Solved)[^0-9]{0,100}(\\d+)");
+                if (rating == 0 && maxRating == 0 && solved == 0) return;
+                maxRating = Math.max(rating, maxRating);
+                prefsRepo.saveCodeChefSolvedCount(solved);
+                prefsRepo.saveCodeChefRatings(rating, maxRating);
+
+                android.app.Activity activity = getActivity();
+                if (activity != null) {
+                    final int finalSolved = solved;
+                    final int finalRating = rating;
+                    final int finalMaxRating = maxRating;
+                    activity.runOnUiThread(() -> {
+                        if (isAdded() && binding != null) {
+                            updateCompetitivePlatformPillDisplay(handle, finalRating, finalMaxRating,
+                                    finalSolved, binding.tvHomeCodeChef);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                android.util.Log.w("HomeFragment", "Could not load CodeChef stats for " + handle, e);
+            } finally {
+                if (conn != null) conn.disconnect();
+            }
+        }).start();
+    }
+
+    private void fetchAtCoderStats(String handle) {
+        new Thread(() -> {
+            HttpURLConnection ratingConnection = null;
+            HttpURLConnection solvedConnection = null;
+            try {
+                String encodedHandle = java.net.URLEncoder.encode(handle, StandardCharsets.UTF_8.name());
+                URL historyUrl = new URL("https://atcoder.jp/users/" + encodedHandle + "/history/json");
+                ratingConnection = (HttpURLConnection) historyUrl.openConnection();
+                ratingConnection.setRequestProperty("User-Agent", "CodeArena Android");
+                ratingConnection.setConnectTimeout(10000);
+                ratingConnection.setReadTimeout(10000);
+                if (ratingConnection.getResponseCode() != HttpURLConnection.HTTP_OK) return;
+                JSONArray history = new JSONArray(readConnectionBody(ratingConnection));
+                int rating = 0;
+                int maxRating = 0;
+                for (int i = 0; i < history.length(); i++) {
+                    JSONObject contest = history.optJSONObject(i);
+                    if (contest == null || !contest.optBoolean("IsRated", true)) continue;
+                    int newRating = contest.optInt("NewRating", 0);
+                    if (newRating > 0) {
+                        rating = newRating;
+                        maxRating = Math.max(maxRating, newRating);
+                    }
+                }
+                ratingConnection.disconnect();
+                ratingConnection = null;
+
+                // AtCoder Problems asks clients to leave at least one second between API requests.
+                Thread.sleep(1100);
+                URL solvedUrl = new URL("https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=" + encodedHandle);
+                solvedConnection = (HttpURLConnection) solvedUrl.openConnection();
+                solvedConnection.setRequestProperty("User-Agent", "CodeArena Android");
+                solvedConnection.setConnectTimeout(10000);
+                solvedConnection.setReadTimeout(10000);
+                if (solvedConnection.getResponseCode() != HttpURLConnection.HTTP_OK) return;
+                JSONObject solvedData = new JSONObject(readConnectionBody(solvedConnection));
+                int solved = solvedData.optInt("count", 0);
+
+                prefsRepo.saveAtCoderSolvedCount(solved);
+                prefsRepo.saveAtCoderRatings(rating, maxRating);
+                android.app.Activity activity = getActivity();
+                if (activity != null) {
+                    final int finalSolved = solved;
+                    final int finalRating = rating;
+                    final int finalMaxRating = maxRating;
+                    activity.runOnUiThread(() -> {
+                        if (isAdded() && binding != null) {
+                            updateCompetitivePlatformPillDisplay(handle, finalRating, finalMaxRating,
+                                    finalSolved, binding.tvHomeAtCoder);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                android.util.Log.w("HomeFragment", "Could not load AtCoder stats for " + handle, e);
+            } finally {
+                if (ratingConnection != null) ratingConnection.disconnect();
+                if (solvedConnection != null) solvedConnection.disconnect();
+            }
+        }).start();
+    }
+
+    private String readConnectionBody(HttpURLConnection connection) throws Exception {
+        StringBuilder body = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) body.append(line);
+        }
+        return body.toString();
+    }
+
+    private int extractHtmlInt(String source, String regex) {
+        Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL).matcher(source);
+        return matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
     }
 
     private void fetchHackerRankSolvedCount(String handle) {

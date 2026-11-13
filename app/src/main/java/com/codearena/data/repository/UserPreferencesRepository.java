@@ -26,7 +26,7 @@ public class UserPreferencesRepository {
                 backupManager.dataChanged();
             } catch (Exception ignored) {}
             try {
-                FirestoreSyncRepository.uploadToFirestore(context);
+                FirestoreSyncRepository.scheduleUpload(context);
             } catch (Exception ignored) {}
         }
     }
@@ -42,6 +42,12 @@ public class UserPreferencesRepository {
     public static final String KEY_LC_SOLVED_COUNT = "lc_solved_count";
     public static final String KEY_CC_SOLVED_COUNT = "cc_solved_count";
     public static final String KEY_ATCODER_SOLVED_COUNT = "atcoder_solved_count";
+    public static final String KEY_LC_RATING = "lc_rating";
+    public static final String KEY_LC_MAX_RATING = "lc_max_rating";
+    public static final String KEY_CC_RATING = "cc_rating";
+    public static final String KEY_CC_MAX_RATING = "cc_max_rating";
+    public static final String KEY_ATCODER_RATING = "atcoder_rating";
+    public static final String KEY_ATCODER_MAX_RATING = "atcoder_max_rating";
     public static final String KEY_HR_SOLVED_COUNT = "hr_solved_count";
     public static final String KEY_CSES_SOLVED_COUNT = "cses_solved_count";
     public static final String KEY_CSES_SOLVED_IDS = "cses_solved_ids";
@@ -65,6 +71,7 @@ public class UserPreferencesRepository {
 
     public void setReaderDarkTheme(boolean dark) {
         getPrefs().edit().putBoolean(KEY_READER_DARK_THEME, dark).apply();
+        requestBackup();
     }
 
     public static final String KEY_NOTIFICATIONS_ENABLED = "notifications_enabled";
@@ -271,6 +278,13 @@ public class UserPreferencesRepository {
         requestBackup();
     }
 
+    public int getLeetCodeRating() { return getPrefs().getInt(KEY_LC_RATING, 0); }
+    public int getLeetCodeMaxRating() { return getPrefs().getInt(KEY_LC_MAX_RATING, 0); }
+    public void saveLeetCodeRatings(int rating, int maxRating) {
+        getPrefs().edit().putInt(KEY_LC_RATING, rating).putInt(KEY_LC_MAX_RATING, maxRating).apply();
+        requestBackup();
+    }
+
     public int getCodeChefSolvedCount() {
         return getPrefs().getInt(KEY_CC_SOLVED_COUNT, 0);
     }
@@ -280,12 +294,26 @@ public class UserPreferencesRepository {
         requestBackup();
     }
 
+    public int getCodeChefRating() { return getPrefs().getInt(KEY_CC_RATING, 0); }
+    public int getCodeChefMaxRating() { return getPrefs().getInt(KEY_CC_MAX_RATING, 0); }
+    public void saveCodeChefRatings(int rating, int maxRating) {
+        getPrefs().edit().putInt(KEY_CC_RATING, rating).putInt(KEY_CC_MAX_RATING, maxRating).apply();
+        requestBackup();
+    }
+
     public int getAtCoderSolvedCount() {
         return getPrefs().getInt(KEY_ATCODER_SOLVED_COUNT, 0);
     }
 
     public void saveAtCoderSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_ATCODER_SOLVED_COUNT, count).apply();
+        requestBackup();
+    }
+
+    public int getAtCoderRating() { return getPrefs().getInt(KEY_ATCODER_RATING, 0); }
+    public int getAtCoderMaxRating() { return getPrefs().getInt(KEY_ATCODER_MAX_RATING, 0); }
+    public void saveAtCoderRatings(int rating, int maxRating) {
+        getPrefs().edit().putInt(KEY_ATCODER_RATING, rating).putInt(KEY_ATCODER_MAX_RATING, maxRating).apply();
         requestBackup();
     }
 
@@ -323,6 +351,7 @@ public class UserPreferencesRepository {
 
     public void saveDailyTarget(int target) {
         getPrefs().edit().putInt(KEY_DAILY_TARGET, target).apply();
+        requestBackup();
     }
 
     public boolean isNotificationsEnabled() {
@@ -331,6 +360,7 @@ public class UserPreferencesRepository {
 
     public void setNotificationsEnabled(boolean enabled) {
         getPrefs().edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, enabled).apply();
+        requestBackup();
     }
 
     public LiveData<Boolean> getNotificationsEnabledLiveData() {
@@ -343,6 +373,7 @@ public class UserPreferencesRepository {
 
     public void setMilestoneAlertsEnabled(boolean enabled) {
         getPrefs().edit().putBoolean(KEY_MILESTONE_ALERTS, enabled).apply();
+        requestBackup();
     }
 
     public LiveData<Boolean> getMilestoneAlertsLiveData() {
@@ -355,6 +386,7 @@ public class UserPreferencesRepository {
 
     public void setFastReviewDebugMode(boolean enabled) {
         getPrefs().edit().putBoolean(KEY_FAST_REVIEW_DEBUG, enabled).apply();
+        requestBackup();
     }
 
     public LiveData<Boolean> getFastReviewDebugLiveData() {
@@ -367,6 +399,7 @@ public class UserPreferencesRepository {
 
     public void setTheme(String theme) {
         getPrefs().edit().putString(KEY_THEME, theme).apply();
+        requestBackup();
     }
 
     public void saveTheme(String theme) {
@@ -451,6 +484,7 @@ public class UserPreferencesRepository {
 
     public void saveFriends(Set<String> handles) {
         getPrefs().edit().putStringSet(KEY_FRIENDS, new HashSet<>(handles)).apply();
+        requestBackup();
     }
 
     public void addFriend(String handle) {

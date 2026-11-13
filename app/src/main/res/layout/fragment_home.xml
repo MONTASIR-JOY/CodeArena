@@ -151,7 +151,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:text="RATING"
                                 android:textColor="@color/text_muted_dark"
-                                android:textSize="10sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -160,7 +160,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
-                                android:textSize="17sp"
+                                android:textSize="19sp"
                                 tools:text="3789"
                                 tools:textColor="@color/primary" />
                         </LinearLayout>
@@ -183,7 +183,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:text="MAX"
                                 android:textColor="@color/text_muted_dark"
-                                android:textSize="10sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -192,7 +192,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
-                                android:textSize="17sp"
+                                android:textSize="19sp"
                                 tools:text="4009"
                                 tools:textColor="@color/text_primary_dark" />
                         </LinearLayout>
@@ -215,7 +215,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:text="SOLVED"
                                 android:textColor="@color/text_muted_dark"
-                                android:textSize="10sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -225,7 +225,7 @@
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
                                 android:textColor="@color/primary"
-                                android:textSize="17sp"
+                                android:textSize="19sp"
                                 tools:text="1420" />
                         </LinearLayout>
 
@@ -247,7 +247,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:text="CONTRIB"
                                 android:textColor="@color/text_muted_dark"
-                                android:textSize="10sp"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -256,7 +256,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
-                                android:textSize="17sp"
+                                android:textSize="19sp"
                                 tools:text="+124"
                                 tools:textColor="@color/verdict_ok" />
                         </LinearLayout>
@@ -308,9 +308,9 @@
                                     tools:text="142 Solved" />
                             </LinearLayout>
 
-                            <!-- CSES (second after LeetCode) -->
+                            <!-- AtCoder -->
                             <LinearLayout
-                                android:id="@+id/pillCses"
+                                android:id="@+id/pillAtCoder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
@@ -327,17 +327,17 @@
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:src="@drawable/ic_logo_cses" />
+                                    android:src="@drawable/ic_logo_atcoder" />
 
                                 <TextView
-                                    android:id="@+id/tvHomeCses"
+                                    android:id="@+id/tvHomeAtCoder"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:fontFamily="sans-serif-medium"
                                     android:textColor="@color/text_primary"
                                     android:textSize="12sp"
-                                    tools:text="CSES" />
+                                    tools:text="12 Solved" />
                             </LinearLayout>
 
                             <!-- CodeChef -->
@@ -372,9 +372,9 @@
                                     tools:text="35 Solved" />
                             </LinearLayout>
 
-                            <!-- AtCoder -->
+                            <!-- CSES -->
                             <LinearLayout
-                                android:id="@+id/pillAtCoder"
+                                android:id="@+id/pillCses"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
@@ -391,17 +391,17 @@
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:src="@drawable/ic_logo_atcoder" />
+                                    android:src="@drawable/ic_logo_cses" />
 
                                 <TextView
-                                    android:id="@+id/tvHomeAtCoder"
+                                    android:id="@+id/tvHomeCses"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:fontFamily="sans-serif-medium"
                                     android:textColor="@color/text_primary"
                                     android:textSize="12sp"
-                                    tools:text="12 Solved" />
+                                    tools:text="CSES" />
                             </LinearLayout>
 
                             <!-- HackerRank -->
@@ -491,6 +491,7 @@
                         android:id="@+id/chartRating"
                         android:layout_width="match_parent"
                         android:layout_height="240dp"
+                        android:layout_marginStart="-8dp"
                         android:layout_marginTop="8dp"
                         android:visibility="visible" />
 
@@ -507,7 +508,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Daily Upsolve Target Card -->
+            <!-- Problems per Day Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardUpsolveTarget"
                 style="@style/Widget.CodeArena.Card"
@@ -539,7 +540,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-bold"
-                            android:text="Daily Upsolve Target"
+                            android:text="@string/home_problems_per_day"
                             android:textColor="@color/text_primary_dark"
                             android:textSize="15sp" />
 

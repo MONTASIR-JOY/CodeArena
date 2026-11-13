@@ -418,7 +418,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp"
-                    tools:text="Daily upsolve target: 3 problems" />
+                    tools:text="3 problems per day" />
 
                 <com.google.android.material.slider.Slider
                     android:id="@+id/sliderDailyTarget"
@@ -448,8 +448,17 @@
                     android:id="@+id/switchFastReview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fast review mode (debug: seconds, not days)"
+                    android:text="@string/settings_fast_review_title"
                     android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginTop="-4dp"
+                    android:text="@string/settings_fast_review_description"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="12sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

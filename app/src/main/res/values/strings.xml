@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">CodeArena</string>
+    <string name="home_problems_per_day">Problems per day</string>
+    <string name="settings_fast_review_title">Fast review schedule (testing only)</string>
+    <string name="settings_fast_review_description">Uses 10 seconds to 5 minutes instead of 1 to 30 days.</string>
     <string name="default_web_client_id">870460973280-h7uo2286muksrpu802lukg117v3auog8.apps.googleusercontent.com</string>
 </resources>

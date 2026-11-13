@@ -4,7 +4,7 @@ name: Build APK
 # It runs on every push, or by hand from the Actions tab (Run workflow).
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, real-java-app]
   workflow_dispatch:
 
 jobs:
@@ -26,15 +26,9 @@ jobs:
       - name: Cache Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Optional: add these as repository secrets to enable the AI coach and other platforms.
-      # With no secrets set they are simply blank and those features stay off.
-      - name: Write optional keys
-        run: |
-          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> local.properties
-          echo "CLIST_USERNAME=${{ secrets.CLIST_USERNAME }}" >> local.properties
-          echo "CLIST_API_KEY=${{ secrets.CLIST_API_KEY }}" >> local.properties
-
-      - name: Build debug APK
+      # Do not inject API secrets into a distributable APK. Features that require
+      # Gemini/Clist credentials remain disabled in this CI artifact.
+      - name: Build debug APK without provider API keys
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace

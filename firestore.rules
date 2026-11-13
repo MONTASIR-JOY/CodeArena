@@ -1,9 +1,91 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can only read and write their own document under users/{userId}
+    function signedInAs(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function exactKeys(value, expectedKeys) {
+      return value is map
+          && value.keys().hasAll(expectedKeys)
+          && value.keys().hasOnly(expectedKeys);
+    }
+
+    function validHandles(handles) {
+      return exactKeys(handles, [
+            'codeforces', 'leetcode', 'codechef', 'atcoder', 'hackerrank', 'cses'
+          ])
+          && handles.codeforces is string && handles.codeforces.size() <= 64
+          && handles.leetcode is string && handles.leetcode.size() <= 64
+          && handles.codechef is string && handles.codechef.size() <= 64
+          && handles.atcoder is string && handles.atcoder.size() <= 64
+          && handles.hackerrank is string && handles.hackerrank.size() <= 64
+          && handles.cses is string && handles.cses.size() <= 64;
+    }
+
+    function validSolvedCounts(counts) {
+      return exactKeys(counts, [
+            'codeforces', 'leetcode', 'codechef', 'atcoder', 'hackerrank', 'cses'
+          ])
+          && counts.codeforces is int && counts.codeforces >= 0
+          && counts.leetcode is int && counts.leetcode >= 0
+          && counts.codechef is int && counts.codechef >= 0
+          && counts.atcoder is int && counts.atcoder >= 0
+          && counts.hackerrank is int && counts.hackerrank >= 0
+          && counts.cses is int && counts.cses >= 0;
+    }
+
+    function validRatings(ratings) {
+      return exactKeys(ratings, ['codeforces', 'leetcode', 'codechef', 'atcoder'])
+          && ratings.codeforces is int && ratings.codeforces >= 0
+          && ratings.leetcode is int && ratings.leetcode >= 0
+          && ratings.codechef is int && ratings.codechef >= 0
+          && ratings.atcoder is int && ratings.atcoder >= 0;
+    }
+
+    function validMaxRatings(ratings) {
+      return exactKeys(ratings, ['leetcode', 'codechef', 'atcoder'])
+          && ratings.leetcode is int && ratings.leetcode >= 0
+          && ratings.codechef is int && ratings.codechef >= 0
+          && ratings.atcoder is int && ratings.atcoder >= 0;
+    }
+
+    function validPreferences(preferences) {
+      return exactKeys(preferences, [
+            'dailyTarget', 'notificationsEnabled', 'milestoneAlertsEnabled',
+            'fastReviewDebugMode', 'theme', 'readerDarkTheme'
+          ])
+          && preferences.dailyTarget is int
+          && preferences.dailyTarget >= 0 && preferences.dailyTarget <= 50
+          && preferences.notificationsEnabled is bool
+          && preferences.milestoneAlertsEnabled is bool
+          && preferences.fastReviewDebugMode is bool
+          && preferences.theme is string && preferences.theme.size() <= 32
+          && preferences.readerDarkTheme is bool;
+    }
+
+    function validProfile(userId) {
+      let data = request.resource.data;
+      return exactKeys(data, [
+            'uid', 'handles', 'solvedCounts', 'ratings', 'maxRatings',
+            'friends', 'readBlogIds', 'readCatalogIds', 'preferences', 'lastUpdated'
+          ])
+          && data.uid is string && data.uid == userId
+          && validHandles(data.handles)
+          && validSolvedCounts(data.solvedCounts)
+          && validRatings(data.ratings)
+          && validMaxRatings(data.maxRatings)
+          && data.friends is list && data.friends.size() <= 500
+          && data.readBlogIds is list && data.readBlogIds.size() <= 5000
+          && data.readCatalogIds is list && data.readCatalogIds.size() <= 5000
+          && validPreferences(data.preferences)
+          && data.lastUpdated is int && data.lastUpdated >= 0;
+    }
+
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if signedInAs(userId);
+      allow create, update: if signedInAs(userId) && validProfile(userId);
+      allow delete: if signedInAs(userId);
     }
   }
 }

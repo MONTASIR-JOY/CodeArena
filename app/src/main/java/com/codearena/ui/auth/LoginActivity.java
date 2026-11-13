@@ -15,6 +15,8 @@ import com.codearena.MainActivity;
 import com.codearena.R;
 import com.codearena.data.repository.FirestoreSyncRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,10 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
-            return;
-        }
+        com.google.firebase.auth.FirebaseUser existingUser = auth.getCurrentUser();
 
         EditText emailEt = findViewById(R.id.etEmail);
         EditText passEt = findViewById(R.id.etPassword);
@@ -61,7 +60,12 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, pwd)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
+                            com.google.firebase.auth.FirebaseUser user = auth.getCurrentUser();
+                            if (user != null) {
+                                continueWithVerifiedEmail(user, email);
+                            } else {
+                                Toast.makeText(this, "Could not load the signed-in account.", Toast.LENGTH_LONG).show();
+                            }
                         } else {
                             String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                             Toast.makeText(this, "Login failed: " + msg, Toast.LENGTH_LONG).show();
@@ -82,16 +86,19 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             com.google.firebase.auth.FirebaseUser user = auth.getCurrentUser();
                             if (user != null) {
-                                user.sendEmailVerification().addOnCompleteListener(verifyTask -> {
-                                    if (verifyTask.isSuccessful()) {
-                                        showVerificationDialog(user, email);
-                                    } else {
-                                        Toast.makeText(this, "Account created, but verification email failed to send.", Toast.LENGTH_LONG).show();
-                                        goToMain();
+                                user.sendEmailVerification().addOnCompleteListener(this, verifyTask -> {
+                                    if (!verifyTask.isSuccessful()) {
+                                        String msg = verifyTask.getException() != null
+                                                ? verifyTask.getException().getMessage()
+                                                : "Unknown error";
+                                        Toast.makeText(this, "Account created, but verification email failed: " + msg,
+                                                Toast.LENGTH_LONG).show();
                                     }
+                                    showVerificationDialog(user, email);
                                 });
                             } else {
-                                goToMain();
+                                Toast.makeText(this, "Account created, but could not load the account. Please sign in.",
+                                        Toast.LENGTH_LONG).show();
                             }
                         } else {
                             String msg = task.getException() != null ? task.getException().getMessage() : "Unknown error";
@@ -101,15 +108,18 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         forgotTv.setOnClickListener(v -> {
-            EditText input = new EditText(this);
-            input.setHint("Enter your email");
-            input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-            input.setPadding(48, 32, 48, 32);
+            View dialogContent = getLayoutInflater()
+                    .inflate(R.layout.dialog_single_text_input, null, false);
+            TextInputLayout inputLayout = dialogContent.findViewById(R.id.tilDialogInput);
+            TextInputEditText input = dialogContent.findViewById(R.id.etDialogInput);
+            inputLayout.setHint("Email address");
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             new MaterialAlertDialogBuilder(this)
                     .setTitle("Reset password")
-                    .setView(input)
+                    .setMessage("Enter the email address linked to your account.")
+                    .setView(dialogContent)
                     .setPositiveButton("Send", (dialog, which) -> {
-                        String email = input.getText().toString().trim();
+                        String email = input.getText() != null ? input.getText().toString().trim() : "";
                         if (!email.isEmpty()) {
                             auth.sendPasswordResetEmail(email)
                                     .addOnCompleteListener(task -> {
@@ -149,6 +159,23 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             });
         });
+
+        if (existingUser != null) {
+            if (isEmailPasswordUser(existingUser)) {
+                existingUser.reload().addOnCompleteListener(this, reloadTask -> {
+                    com.google.firebase.auth.FirebaseUser currentUser = auth.getCurrentUser();
+                    if (currentUser == null) return;
+                    if (reloadTask.isSuccessful() && currentUser.isEmailVerified()) {
+                        FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
+                    } else {
+                        auth.signOut();
+                        Toast.makeText(this, "Please verify your email, then sign in.", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
+            }
+        }
     }
 
     @Override
@@ -188,6 +215,23 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    private boolean isEmailPasswordUser(com.google.firebase.auth.FirebaseUser user) {
+        for (com.google.firebase.auth.UserInfo provider : user.getProviderData()) {
+            if ("password".equals(provider.getProviderId())) return true;
+        }
+        return false;
+    }
+
+    private void continueWithVerifiedEmail(com.google.firebase.auth.FirebaseUser user, String email) {
+        user.reload().addOnCompleteListener(this, reloadTask -> {
+            if (reloadTask.isSuccessful() && user.isEmailVerified()) {
+                FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
+            } else {
+                showVerificationDialog(user, email);
+            }
+        });
+    }
+
     private void goToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -198,23 +242,22 @@ public class LoginActivity extends AppCompatActivity {
     private void showVerificationDialog(com.google.firebase.auth.FirebaseUser user, String email) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_email_verification, null);
         TextView subtitleTv = dialogView.findViewById(R.id.tvVerificationSubtitle);
-        subtitleTv.setText("We have sent a verification link to " + email + ". Please check your Gmail inbox, click the link, and tap below.");
+        subtitleTv.setText("Check the inbox or spam folder for " + email + ", open the verification link, then tap “I've Verified”.");
 
         androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogView)
                 .setCancelable(false)
                 .create();
 
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
-        }
-
         dialogView.findViewById(R.id.btnVerified).setOnClickListener(v -> {
-            user.reload().addOnCompleteListener(reloadTask -> {
-                if (user.isEmailVerified()) {
+            user.reload().addOnCompleteListener(this, reloadTask -> {
+                if (reloadTask.isSuccessful() && user.isEmailVerified()) {
                     Toast.makeText(this, "Email verified successfully!", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
-                    goToMain();
+                    FirestoreSyncRepository.pullFromFirestore(this, success -> goToMain());
+                } else if (!reloadTask.isSuccessful()) {
+                    Toast.makeText(this, "Could not check verification. Check your connection and try again.",
+                            Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(this, "Email not verified yet. Please check your inbox.", Toast.LENGTH_LONG).show();
                 }
@@ -226,7 +269,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (resendTask.isSuccessful()) {
                     Toast.makeText(this, "Verification link resent to " + email, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Failed to resend email.", Toast.LENGTH_SHORT).show();
+                    String msg = resendTask.getException() != null
+                            ? resendTask.getException().getMessage()
+                            : "Unknown error";
+                    Toast.makeText(this, "Failed to resend email: " + msg, Toast.LENGTH_LONG).show();
                 }
             });
         });
@@ -237,5 +283,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(
+                    new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
     }
 }

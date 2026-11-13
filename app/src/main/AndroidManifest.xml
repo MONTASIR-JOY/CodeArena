@@ -45,10 +45,10 @@
         </activity>
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:exported="true"
+            android:exported="false"
             android:theme="@style/Theme.CodeArena" />
 
-        <!-- Foreground Service: Runs the virtual contest stopwatch, ongoing notifications, and milestone alerts -->
+        <!-- Timer service scaffold; see AUDIT_REPORT.md for current limitations. -->
         <service
             android:name=".service.ContestTimerService"
             android:enabled="true"
@@ -60,28 +60,30 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!-- BroadcastReceiver: Reschedules upcoming contest and spaced repetition upsolve reminders on system boot -->
+        <!-- Restores cached contest reminders after system boot; receiver accepts system lifecycle broadcasts only. -->
         <receiver
             android:name=".receiver.BootReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
-        <!-- BroadcastReceiver: Handles AlarmManager triggers for scheduled contest and upsolve reminders -->
+        <!-- Handles scheduled contest reminder alarms. -->
         <receiver
             android:name=".receiver.ContestAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
 
-        <!-- ContentProvider: Inter-app data sharing exposing CodeArena contests and records via Room/SQLite -->
+        <!-- Internal provider for app-owned Room data; not accessible to other apps. -->
         <provider
             android:name=".data.provider.CodeArenaContentProvider"
             android:authorities="${applicationId}.provider"
-            android:exported="true" />
+            android:exported="false"
+            android:grantUriPermissions="false" />
 
         <!-- FileProvider: Securely exposes rendered result card bitmap images for external sharing intents -->
         <provider
