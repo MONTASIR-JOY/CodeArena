@@ -101,6 +101,12 @@ public class SettingsFragment extends Fragment {
                     prefsRepo.saveHackerRankHandle(newHandle);
                     updateAllHandlesUI();
                 }));
+
+        binding.btnChangeHandleCses.setOnClickListener(v ->
+                showHandleDialog("CSES", "e.g. user ID or handle", prefsRepo.getCsesHandle(), newHandle -> {
+                    prefsRepo.saveCsesHandle(newHandle);
+                    updateAllHandlesUI();
+                }));
     }
 
     private void updateAllHandlesUI() {
@@ -118,6 +124,9 @@ public class SettingsFragment extends Fragment {
 
         String hr = prefsRepo.getHackerRankHandle();
         binding.tvSettingsHandleHackerRank.setText(hr.isEmpty() ? "Not configured" : hr);
+
+        String cses = prefsRepo.getCsesHandle();
+        binding.tvSettingsHandleCses.setText(cses.isEmpty() ? "Not configured" : cses);
     }
 
     private interface OnHandleSavedListener {

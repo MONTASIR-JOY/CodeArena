@@ -18,12 +18,12 @@ val clistApiKey: String = localProperties.getProperty("CLIST_API_KEY") ?: ""
 
 android {
     namespace = "com.codearena"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.codearena"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -74,6 +74,11 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.core:core:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.activity:activity:1.9.3")
+
+    // Jetpack Glance (Home Screen Widgets)
+    implementation("androidx.glance:glance-appwidget:1.1.0")
+    implementation("androidx.glance:glance-material3:1.1.0")
 
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment:2.5.3")

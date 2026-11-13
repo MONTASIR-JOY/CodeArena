@@ -2,6 +2,9 @@
 <resources>
     <!-- Brand Primary & Accent (Neon Tech Cyber / Competitive Programming aesthetic) -->
     <color name="primary">#0891B2</color>
+    <color name="rating_bg_dark">#121212</color>
+    <!-- Neon accent for rating trajectory -->
+    <color name="rating_neon">#00FFAA</color>
     <color name="on_primary">#FFFFFF</color>
     <color name="primary_container">#CFFAFE</color>
     <color name="on_primary_container">#083344</color>
@@ -87,4 +90,6 @@
     <color name="platform_codechef_bg">#451A03</color>
     <color name="platform_hackerrank">#10B981</color>
     <color name="platform_hackerrank_bg">#064E3B</color>
+    <color name="platform_cses">#38BDF8</color>
+    <color name="platform_cses_bg">#0C4A6E</color>
 </resources>

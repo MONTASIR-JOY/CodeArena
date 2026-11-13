@@ -98,15 +98,12 @@
                     android:orientation="horizontal"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:background="@color/platform_codeforces_bg"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center"
-                        android:text="CF"
-                        android:textColor="@color/platform_codeforces"
-                        android:textSize="13sp" />
+                        android:background="@drawable/bg_chip_tag"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_logo_codeforces" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -153,15 +150,12 @@
                     android:orientation="horizontal"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:background="@color/platform_leetcode_bg"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center"
-                        android:text="LC"
-                        android:textColor="@color/platform_leetcode"
-                        android:textSize="13sp" />
+                        android:background="@drawable/bg_chip_tag"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_logo_leetcode" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -200,7 +194,7 @@
                     android:layout_height="1dp"
                     android:background="@color/stroke_dark" />
 
-                <!-- 3. CodeChef -->
+                <!-- 3. CSES -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -208,15 +202,64 @@
                     android:orientation="horizontal"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:background="@color/platform_codechef_bg"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center"
-                        android:text="CC"
-                        android:textColor="@color/platform_codechef"
-                        android:textSize="13sp" />
+                        android:background="@drawable/bg_chip_tag"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_logo_cses" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="CSES"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvSettingsHandleCses"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_muted"
+                            android:textSize="13sp"
+                            tools:text="Not configured" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnChangeHandleCses"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edit" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/stroke_dark" />
+
+                <!-- 4. CodeChef -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_chip_tag"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_logo_codechef" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -255,7 +298,7 @@
                     android:layout_height="1dp"
                     android:background="@color/stroke_dark" />
 
-                <!-- 4. AtCoder -->
+                <!-- 5. AtCoder -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -263,15 +306,12 @@
                     android:orientation="horizontal"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:background="@color/platform_atcoder_bg"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center"
-                        android:text="AC"
-                        android:textColor="@color/platform_atcoder"
-                        android:textSize="13sp" />
+                        android:background="@drawable/bg_chip_tag"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_logo_atcoder" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -310,7 +350,7 @@
                     android:layout_height="1dp"
                     android:background="@color/stroke_dark" />
 
-                <!-- 5. HackerRank -->
+                <!-- 6. HackerRank -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -318,15 +358,12 @@
                     android:orientation="horizontal"
                     android:paddingVertical="8dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:background="@color/platform_hackerrank_bg"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center"
-                        android:text="HR"
-                        android:textColor="@color/platform_hackerrank"
-                        android:textSize="13sp" />
+                        android:background="@drawable/bg_chip_tag"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_logo_hackerrank" />
 
                     <LinearLayout
                         android:layout_width="0dp"

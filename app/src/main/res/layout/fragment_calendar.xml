@@ -7,14 +7,31 @@
     android:background="@color/bg_dark"
     android:orientation="vertical">
 
-    <!-- Top App Bar / Title -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarCalendar"
+    <!-- Screen Header -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/surface_dark"
-        app:title="Contest Calendar"
-        app:titleTextColor="@color/text_primary_dark" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text="Contest Calendar"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Interactive monthly calendar and schedule of competitive programming contests"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="13sp" />
+    </LinearLayout>
 
     <!-- Swipe Refresh Layout -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -262,4 +279,3 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
-

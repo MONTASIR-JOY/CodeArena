@@ -25,6 +25,7 @@ public class ClistRepository {
         PLATFORMS.put("atcoder.jp", "AtCoder");
         PLATFORMS.put("codechef.com", "CodeChef");
         PLATFORMS.put("leetcode.com", "LeetCode");
+        PLATFORMS.put("cses.fi", "CSES");
     }
 
     public static boolean isConfigured() {

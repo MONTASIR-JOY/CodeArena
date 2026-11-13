@@ -49,6 +49,7 @@ public class FirestoreSyncRepository {
         userData.put("codechefHandle", prefs.getCodeChefHandle());
         userData.put("atcoderHandle", prefs.getAtCoderHandle());
         userData.put("hackerrankHandle", prefs.getHackerRankHandle());
+        userData.put("csesHandle", prefs.getCsesHandle());
 
         // Structured platform handles map for clear Firestore Console display
         Map<String, String> handlesMap = new HashMap<>();
@@ -57,6 +58,7 @@ public class FirestoreSyncRepository {
         handlesMap.put("codechef", prefs.getCodeChefHandle());
         handlesMap.put("atcoder", prefs.getAtCoderHandle());
         handlesMap.put("hackerrank", prefs.getHackerRankHandle());
+        handlesMap.put("cses", prefs.getCsesHandle());
         userData.put("handles", handlesMap);
 
         // Platform solve counts
@@ -66,6 +68,7 @@ public class FirestoreSyncRepository {
         solvedCountsMap.put("codechef", prefs.getCodeChefSolvedCount());
         solvedCountsMap.put("atcoder", prefs.getAtCoderSolvedCount());
         solvedCountsMap.put("hackerrank", prefs.getHackerRankSolvedCount());
+        solvedCountsMap.put("cses", prefs.getCsesSolvedCount());
         userData.put("solvedCounts", solvedCountsMap);
 
         userData.put("rating", prefs.getUserRating());
@@ -121,6 +124,10 @@ public class FirestoreSyncRepository {
                 if ((hr == null || hr.isEmpty()) && handles != null) hr = (String) handles.get("hackerrank");
                 if (hr != null && !hr.isEmpty()) prefs.saveHackerRankHandle(hr);
 
+                String cses = doc.getString("csesHandle");
+                if ((cses == null || cses.isEmpty()) && handles != null) cses = (String) handles.get("cses");
+                if (cses != null && !cses.isEmpty()) prefs.saveCsesHandle(cses);
+
                 Map<String, Object> counts = (Map<String, Object>) doc.get("solvedCounts");
                 if (counts != null) {
                     if (counts.get("codeforces") instanceof Number) {
@@ -137,6 +144,9 @@ public class FirestoreSyncRepository {
                     }
                     if (counts.get("hackerrank") instanceof Number) {
                         prefs.saveHackerRankSolvedCount(((Number) counts.get("hackerrank")).intValue());
+                    }
+                    if (counts.get("cses") instanceof Number) {
+                        prefs.saveCsesSolvedCount(((Number) counts.get("cses")).intValue());
                     }
                 }
 

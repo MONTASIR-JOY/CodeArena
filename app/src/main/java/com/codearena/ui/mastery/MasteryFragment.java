@@ -35,6 +35,8 @@ import java.util.Set;
 
 public class MasteryFragment extends Fragment {
 
+    private static final int PAGE_SIZE = 100;
+
     private FragmentMasteryBinding binding;
     private AppDatabase db;
     private UserPreferencesRepository prefsRepo;
@@ -44,6 +46,8 @@ public class MasteryFragment extends Fragment {
     private final Set<String> solvedProblemKeys = new HashSet<>();
     private final Map<String, List<CfProblem>> cachedTagProblems = new HashMap<>();
     private final List<CfProblem> currentTagRawProblems = new ArrayList<>();
+    private final List<CfProblem> filteredUnsolvedProblems = new ArrayList<>();
+    private int displayedCount = PAGE_SIZE;
 
     private String selectedTag = "dp";
     private String difficultyTier = "ALL";
@@ -116,6 +120,12 @@ public class MasteryFragment extends Fragment {
 
         binding.rvProblems.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvProblems.setAdapter(problemAdapter);
+
+        // Load More button click
+        binding.btnLoadMore.setOnClickListener(v -> {
+            displayedCount += PAGE_SIZE;
+            renderPage();
+        });
     }
 
     private void setupFilters() {
@@ -165,12 +175,14 @@ public class MasteryFragment extends Fragment {
             else if (id == R.id.chipDiff2000_2100) difficultyTier = "2000_2100";
             else if (id == R.id.chipDiff2200_2300) difficultyTier = "2200_2300";
             else if (id == R.id.chipDiff2400Plus) difficultyTier = "2400_PLUS";
+            displayedCount = PAGE_SIZE;
             applyFilterAndRender();
         });
     }
 
     private void selectTag(String tag) {
         selectedTag = tag;
+        displayedCount = PAGE_SIZE;
         binding.tvStatusTag.setText("Showing unsolved for: " + tag);
         loadProblemsForTag(tag);
     }
@@ -296,11 +308,37 @@ public class MasteryFragment extends Fragment {
             return Integer.compare(rA, rB);
         });
 
-        problemAdapter.setProblems(unsolved);
+        filteredUnsolvedProblems.clear();
+        filteredUnsolvedProblems.addAll(unsolved);
+
         binding.tvProblemCount.setText(unsolved.size() + " unsolved");
         binding.tvEmpty.setVisibility(unsolved.isEmpty() ? View.VISIBLE : View.GONE);
         if (unsolved.isEmpty()) {
             binding.tvEmpty.setText("No unsolved problems found for " + selectedTag + " in this difficulty range!");
+            problemAdapter.setProblems(new ArrayList<>());
+            binding.btnLoadMore.setVisibility(View.GONE);
+        } else {
+            renderPage();
+        }
+    }
+
+    private void renderPage() {
+        if (filteredUnsolvedProblems.isEmpty()) {
+            problemAdapter.setProblems(new ArrayList<>());
+            binding.btnLoadMore.setVisibility(View.GONE);
+            return;
+        }
+
+        int count = Math.min(displayedCount, filteredUnsolvedProblems.size());
+        List<CfProblem> pageItems = new ArrayList<>(filteredUnsolvedProblems.subList(0, count));
+        problemAdapter.setProblems(pageItems);
+
+        if (count < filteredUnsolvedProblems.size()) {
+            int remaining = filteredUnsolvedProblems.size() - count;
+            binding.btnLoadMore.setText("Load More (" + remaining + " remaining)");
+            binding.btnLoadMore.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnLoadMore.setVisibility(View.GONE);
         }
     }
 

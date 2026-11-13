@@ -92,7 +92,11 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
                 binding.tvCatalogDescription.setVisibility(View.GONE);
             }
 
-            binding.tvCatalogAuthor.setText("By " + item.getAuthor() + " · Blog #" + item.getBlogId());
+            if (item.getBlogId() > 0) {
+                binding.tvCatalogAuthor.setText("By " + item.getAuthor() + " · Blog #" + item.getBlogId());
+            } else {
+                binding.tvCatalogAuthor.setText(item.getAuthor());
+            }
 
             // Detach listener before changing checked state to avoid unwanted triggers
             binding.cbCatalogRead.setOnCheckedChangeListener(null);

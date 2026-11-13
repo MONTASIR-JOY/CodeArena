@@ -8,27 +8,35 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.util.Log;
 import com.codearena.R;
+import com.codearena.data.repository.UserPreferencesRepository;
 
 /**
- * Simple placeholder widget that shows a static label.
- * In a full implementation you could show today’s contest or stats.
+ * Daily Widget Provider displaying CodeArena user status and upsolve targets on the Home Screen.
  */
 public class DailyWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "DailyWidgetProvider";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        UserPreferencesRepository repo = new UserPreferencesRepository(context);
+        String handle = repo.getHandle();
+        if (handle == null || handle.trim().isEmpty()) {
+            handle = "Codeforces User";
+        }
+
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_daily);
-            // Example: set a static text
-            views.setTextViewText(R.id.widget_text, "CodeArena Daily");
-            // Optionally set click to launch the app
+            views.setTextViewText(R.id.widget_title, "CodeArena Daily Target");
+            views.setTextViewText(R.id.widget_handle, handle);
+            views.setTextViewText(R.id.widget_progress_text, "🎯 0/1 solved today");
+
             Intent intent = new Intent(context, com.codearena.MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.widget_root, pendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-        Log.i(TAG, "Widget updated " + appWidgetIds.length + " instances");
+        Log.i(TAG, "DailyWidgetProvider updated " + appWidgetIds.length + " instances");
     }
 }
-

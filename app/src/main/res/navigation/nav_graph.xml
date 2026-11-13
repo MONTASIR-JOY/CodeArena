@@ -127,4 +127,9 @@
         android:name="com.codearena.ui.catalog.CatalogFragment"
         android:label="Codeforces Catalog" />
 
+    <fragment
+        android:id="@+id/csesFragment"
+        android:name="com.codearena.ui.cses.CsesFragment"
+        android:label="CSES Problem Set" />
+
 </navigation>

@@ -127,7 +127,7 @@
                         android:layout_marginVertical="12dp"
                         android:background="@color/stroke_dark" />
 
-                    <!-- Rating & Problem Stats Row (4 Columns) -->
+                    <!-- Rating & Problem Stats Row (4 Columns with Glass/Stat-box styling) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -137,12 +137,18 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@drawable/bg_stat_box"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="4dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
                                 android:text="RATING"
                                 android:textColor="@color/text_muted_dark"
                                 android:textSize="10sp"
@@ -154,7 +160,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 tools:text="3789"
                                 tools:textColor="@color/primary" />
                         </LinearLayout>
@@ -163,12 +169,18 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="3dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@drawable/bg_stat_box"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="4dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
                                 android:text="MAX"
                                 android:textColor="@color/text_muted_dark"
                                 android:textSize="10sp"
@@ -180,7 +192,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 tools:text="4009"
                                 tools:textColor="@color/text_primary_dark" />
                         </LinearLayout>
@@ -189,12 +201,18 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="3dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@drawable/bg_stat_box"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="4dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
                                 android:text="SOLVED"
                                 android:textColor="@color/text_muted_dark"
                                 android:textSize="10sp"
@@ -207,7 +225,7 @@
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
                                 android:textColor="@color/primary"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 tools:text="1420" />
                         </LinearLayout>
 
@@ -215,12 +233,18 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@drawable/bg_stat_box"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="4dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
                                 android:text="CONTRIB"
                                 android:textColor="@color/text_muted_dark"
                                 android:textSize="10sp"
@@ -232,7 +256,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:fontFamily="sans-serif-black"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 tools:text="+124"
                                 tools:textColor="@color/verdict_ok" />
                         </LinearLayout>
@@ -282,6 +306,38 @@
                                     android:textColor="@color/text_primary"
                                     android:textSize="12sp"
                                     tools:text="142 Solved" />
+                            </LinearLayout>
+
+                            <!-- CSES (second after LeetCode) -->
+                            <LinearLayout
+                                android:id="@+id/pillCses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_chip_tag"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="8dp"
+                                android:paddingTop="5dp"
+                                android:paddingEnd="12dp"
+                                android:paddingBottom="5dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_logo_cses" />
+
+                                <TextView
+                                    android:id="@+id/tvHomeCses"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="12sp"
+                                    tools:text="CSES" />
                             </LinearLayout>
 
                             <!-- CodeChef -->
@@ -434,8 +490,8 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/chartRating"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_height="240dp"
+                        android:layout_marginTop="8dp"
                         android:visibility="visible" />
 
                     <!-- Empty State for Chart -->
@@ -541,8 +597,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"
                 android:fontFamily="sans-serif-bold"
                 android:text="Arena Shortcuts"
                 android:textColor="@color/text_secondary_dark"
@@ -554,7 +610,7 @@
                 style="@style/Widget.CodeArena.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="14dp"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -606,7 +662,7 @@
                 style="@style/Widget.CodeArena.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="14dp"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -640,8 +696,7 @@
                 style="@style/Widget.CodeArena.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="14dp"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -692,6 +747,63 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Action Card: CSES Problem Set (Below Codeforces Catalog) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardActionCses"
+                style="@style/Widget.CodeArena.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_logo_cses" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-bold"
+                            android:text="CSES Problem Set"
+                            android:textColor="@color/text_primary_dark"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tvCsesCardSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="219 benchmark tasks across 10 categories • Unsolved filter"
+                            android:textColor="@color/text_secondary_dark"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-bold"
+                        android:text="Practice →"
+                        android:textColor="@color/primary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -703,7 +815,7 @@
                     style="@style/Widget.CodeArena.Card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true">
@@ -738,7 +850,7 @@
                     style="@style/Widget.CodeArena.Card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true">
@@ -771,7 +883,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="14dp"
                 android:orientation="horizontal">
 
                 <!-- Action 3: Tag Mastery -->
@@ -780,7 +892,7 @@
                     style="@style/Widget.CodeArena.Card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true">
@@ -815,7 +927,7 @@
                     style="@style/Widget.CodeArena.Card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true">

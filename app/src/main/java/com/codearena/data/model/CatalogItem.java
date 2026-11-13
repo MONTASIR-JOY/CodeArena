@@ -31,6 +31,9 @@ public class CatalogItem implements Serializable {
     @SerializedName("subSubBlock")
     private String subSubBlock;
 
+    @SerializedName("url")
+    private String url;
+
     private boolean isRead;
 
     public CatalogItem() {}
@@ -56,6 +59,8 @@ public class CatalogItem implements Serializable {
     public String getMainBlock() { return mainBlock != null ? mainBlock : "General Advice"; }
     public String getSubBlock() { return subBlock != null ? subBlock : ""; }
     public String getSubSubBlock() { return subSubBlock != null ? subSubBlock : ""; }
+    public String getUrl() { return url != null ? url : ""; }
+    public void setUrl(String url) { this.url = url; }
 
     // Compatibility helpers
     public String getSection() { return getMainBlock(); }

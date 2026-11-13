@@ -1,6 +1,8 @@
 package com.codearena.ui.catalog;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,13 +21,14 @@ import com.codearena.databinding.FragmentCatalogBinding;
 import com.codearena.ui.adapter.CatalogAdapter;
 import com.google.android.material.chip.Chip;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class CatalogFragment extends Fragment {
 
-    private static final int PAGE_SIZE = 25;
+    private static final int PAGE_SIZE = 20;
 
     private FragmentCatalogBinding binding;
     private CatalogRepository catalogRepo;
@@ -70,14 +73,25 @@ public class CatalogFragment extends Fragment {
             public void onItemClick(CatalogItem item) {
                 Bundle args = new Bundle();
                 args.putLong("blog_id", item.getBlogId());
+                args.putLong("catalog_item_id", item.getId());
                 args.putString("blog_title", CatalogAdapter.cleanTitle(item.getTitle()));
-                args.putString("blog_author", item.getAuthor());
+                String authorOrCategory = (item.getAuthor() != null && !item.getAuthor().trim().isEmpty())
+                        ? item.getAuthor()
+                        : item.getMainBlock();
+                args.putString("blog_author", authorOrCategory);
+
+                if (item.getUrl() != null && !item.getUrl().isEmpty()) {
+                    args.putString("web_url", item.getUrl());
+                } else if (item.getBlogId() > 0) {
+                    args.putString("web_url", "https://codeforces.com/blog/entry/" + item.getBlogId());
+                }
                 Navigation.findNavController(requireView()).navigate(R.id.blogDetailFragment, args);
             }
 
             @Override
             public void onToggleRead(CatalogItem item, boolean isRead) {
                 catalogRepo.setItemRead(item.getId(), isRead);
+                // CatalogRepository.setItemRead() now updates CSES solved count automatically
                 updateProgress();
 
                 int readFilterId = binding.chipGroupReadStatus.getCheckedChipId();
@@ -193,7 +207,7 @@ public class CatalogFragment extends Fragment {
     }
 
     private void loadCatalog() {
-        allItems = catalogRepo.getCatalogItems();
+        allItems = catalogRepo.getCodeforcesCatalogItems();
         rebuildSubBlockChips();
         updateProgress();
         applyFilters();
@@ -214,7 +228,7 @@ public class CatalogFragment extends Fragment {
 
         binding.progressCatalog.setProgress(percent);
         binding.tvCatalogProgressPercent.setText(percent + "%");
-        binding.tvCatalogProgressDetail.setText(readCount + " of " + total + " tutorials marked as read");
+        binding.tvCatalogProgressDetail.setText(readCount + " of " + total + " completed");
     }
 
     private void applyFilters() {

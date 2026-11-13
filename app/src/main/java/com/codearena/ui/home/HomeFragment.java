@@ -3,6 +3,7 @@ package com.codearena.ui.home;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -21,13 +22,19 @@ import com.codearena.data.model.CfRatingChange;
 import com.codearena.data.model.CfSubmission;
 import com.codearena.data.model.CfUser;
 import com.codearena.data.model.CfProblem;
+import com.codearena.data.model.CatalogItem;
+import com.codearena.data.repository.CatalogRepository;
 import com.codearena.data.repository.CodeforcesRepository;
 import com.codearena.data.repository.ContestRepository;
 import com.codearena.data.repository.UserPreferencesRepository;
 import com.codearena.databinding.FragmentHomeBinding;
+import com.codearena.ui.widget.TrajectoryMarkerView;
 import com.codearena.util.RankColors;
 import com.codearena.util.TimeUtils;
+import androidx.core.content.ContextCompat;
+import android.graphics.drawable.Drawable;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -116,6 +123,9 @@ public class HomeFragment extends Fragment {
         binding.cardActionCatalog.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.catalogFragment));
 
+        binding.cardActionCses.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.csesFragment));
+
         binding.btnOpenUpsolve.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.nav_upsolve));
     }
@@ -161,6 +171,18 @@ public class HomeFragment extends Fragment {
         // reorder: render linked handles before loading solve counts so counts overwrite handles later
         renderLinkedHandles();
         loadUpsolveStats();
+
+        // Instant display of cached rating history if available
+        String cachedHistoryJson = prefsRepo.getCachedRatingHistoryJson();
+        if (cachedHistoryJson != null && !cachedHistoryJson.trim().isEmpty()) {
+            try {
+                java.lang.reflect.Type listType = new com.google.gson.reflect.TypeToken<List<CfRatingChange>>() {}.getType();
+                List<CfRatingChange> cachedHistory = new com.google.gson.Gson().fromJson(cachedHistoryJson, listType);
+                if (cachedHistory != null && !cachedHistory.isEmpty()) {
+                    renderRatingChart(cachedHistory);
+                }
+            } catch (Exception ignored) {}
+        }
 
         cfRepo.validateAndFetchUser(handle, new CodeforcesRepository.Callback<CfUser>() {
             @Override
@@ -218,6 +240,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(List<CfRatingChange> history) {
                 if (!isAdded()) return;
+                if (history != null && !history.isEmpty()) {
+                    try {
+                        String json = new com.google.gson.Gson().toJson(history);
+                        prefsRepo.setCachedRatingHistoryJson(json);
+                    } catch (Exception ignored) {}
+                }
                 requireActivity().runOnUiThread(() -> renderRatingChart(history));
             }
 
@@ -244,11 +272,13 @@ public class HomeFragment extends Fragment {
 
     private void renderLinkedHandles() {
         String lc = prefsRepo.getLeetCodeHandle();
+        String cses = prefsRepo.getCsesHandle();
         String cc = prefsRepo.getCodeChefHandle();
         String ac = prefsRepo.getAtCoderHandle();
         String hr = prefsRepo.getHackerRankHandle();
 
         updatePlatformPillDisplay(lc, prefsRepo.getLeetCodeSolvedCount(), binding.tvHomeLeetCode);
+        updatePlatformPillDisplay(cses, prefsRepo.getCsesSolvedCount(), binding.tvHomeCses);
         updatePlatformPillDisplay(cc, prefsRepo.getCodeChefSolvedCount(), binding.tvHomeCodeChef);
         updatePlatformPillDisplay(ac, prefsRepo.getAtCoderSolvedCount(), binding.tvHomeAtCoder);
         updatePlatformPillDisplay(hr, prefsRepo.getHackerRankSolvedCount(), binding.tvHomeHackerRank);
@@ -256,6 +286,11 @@ public class HomeFragment extends Fragment {
         binding.pillLeetCode.setOnClickListener(v ->
                 showHandleDialog("LeetCode", "e.g. leetcode_user", prefsRepo.getLeetCodeHandle(), newHandle -> {
                     prefsRepo.saveLeetCodeHandle(newHandle);
+                    loadData();
+                }));
+        binding.pillCses.setOnClickListener(v ->
+                showHandleDialog("CSES", "e.g. 12345 or cses_user", prefsRepo.getCsesHandle(), newHandle -> {
+                    prefsRepo.saveCsesHandle(newHandle);
                     loadData();
                 }));
         binding.pillCodeChef.setOnClickListener(v ->
@@ -311,9 +346,27 @@ public class HomeFragment extends Fragment {
         binding.tvChartEmpty.setVisibility(View.GONE);
         binding.chartRating.setVisibility(View.VISIBLE);
 
-        List<Entry> entries = new ArrayList<>();
+        // Compute min/max rating from full history
+        int minRating = Integer.MAX_VALUE;
+        int maxRating = Integer.MIN_VALUE;
         for (int i = 0; i < history.size(); i++) {
-            entries.add(new Entry(i, history.get(i).getNewRating()));
+            int rating = history.get(i).getNewRating();
+            if (rating < minRating) minRating = rating;
+            if (rating > maxRating) maxRating = rating;
+        }
+
+        // Build chart entries – sample at most MAX_POINTS for performance
+        final int MAX_POINTS = 100;
+        List<Entry> entries = new ArrayList<>();
+        int step = Math.max(1, history.size() / MAX_POINTS);
+        for (int i = 0; i < history.size(); i += step) {
+            int rating = history.get(i).getNewRating();
+            entries.add(new Entry(i, rating));
+        }
+        // Ensure last point is always included
+        int lastIdx = history.size() - 1;
+        if (entries.isEmpty() || (int) entries.get(entries.size() - 1).getX() != lastIdx) {
+            entries.add(new Entry(lastIdx, history.get(lastIdx).getNewRating()));
         }
 
         if (!history.isEmpty()) {
@@ -326,24 +379,104 @@ public class HomeFragment extends Fragment {
             binding.tvRatingDelta.setVisibility(View.GONE);
         }
 
+        int primaryColor = ContextCompat.getColor(requireContext(), R.color.primary);
+
         LineDataSet dataSet = new LineDataSet(entries, "Rating");
-        dataSet.setColor(Color.parseColor("#4A90E2"));
-        dataSet.setCircleColor(Color.parseColor("#4A90E2"));
+        dataSet.setColor(primaryColor);
         dataSet.setLineWidth(2.5f);
-        dataSet.setCircleRadius(3f);
-        dataSet.setDrawCircleHole(false);
-        dataSet.setValueTextColor(Color.WHITE);
-        dataSet.setValueTextSize(9f);
+
+        // Smooth modern sparkline style matching the app's cyan/primary theme:
+        // Hide cluttered individual dots along the line; only highlight on tap/drag
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawValues(false);
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setCubicIntensity(0.18f);
+
+        // Highlight indicator on touch
+        dataSet.setHighlightEnabled(true);
+        dataSet.setHighLightColor(primaryColor);
+        dataSet.setHighlightLineWidth(1.5f);
+        dataSet.setDrawHorizontalHighlightIndicator(false);
+
+        // Gradient Area Fill under the curve
+        dataSet.setDrawFilled(true);
+        Drawable fillDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_chart_gradient);
+        if (fillDrawable != null) {
+            dataSet.setFillDrawable(fillDrawable);
+        } else {
+            dataSet.setFillColor(primaryColor);
+            dataSet.setFillAlpha(35);
+        }
 
         LineData lineData = new LineData(dataSet);
         binding.chartRating.setData(lineData);
+
+        // Disable SwipeRefresh during chart interaction to prevent loading spinner
+        binding.chartRating.setOnChartGestureListener(new com.github.mikephil.charting.listener.OnChartGestureListener() {
+            @Override public void onChartGestureStart(MotionEvent me, com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture lastPerformedGesture) {
+                binding.srlHome.setEnabled(false);
+            }
+            @Override public void onChartGestureEnd(MotionEvent me, com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture lastPerformedGesture) {
+                binding.srlHome.setEnabled(true);
+            }
+            @Override public void onChartLongPressed(MotionEvent me) {}
+            @Override public void onChartDoubleTapped(MotionEvent me) {}
+            @Override public void onChartSingleTapped(MotionEvent me) {}
+            @Override public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {}
+            @Override public void onChartScale(MotionEvent me, float scaleX, float scaleY) {}
+            @Override public void onChartTranslate(MotionEvent me, float dX, float dY) {}
+        });
         binding.chartRating.getDescription().setEnabled(false);
         binding.chartRating.getLegend().setEnabled(false);
+        binding.chartRating.setTouchEnabled(true);
+        binding.chartRating.setDragEnabled(true);
+        // Allow independent X and Y scaling (vertical + horizontal zoom)
+        binding.chartRating.setScaleXEnabled(true);
+        binding.chartRating.setScaleYEnabled(true);
+        // setPinchZoom(false) means X and Y scale independently; true locks them together
+        binding.chartRating.setPinchZoom(false);
+        binding.chartRating.setDoubleTapToZoomEnabled(true);
+        binding.chartRating.setDrawGridBackground(false);
+        binding.chartRating.resetViewPortOffsets();
+        // Snug offsets so numbers are fully visible without wasting extra chart area
+        binding.chartRating.setExtraOffsets(2f, 8f, 10f, 4f);
+
+        // Interactive Tooltip / MarkerView
+        TrajectoryMarkerView marker = new TrajectoryMarkerView(requireContext(), history);
+        marker.setChartView(binding.chartRating);
+        binding.chartRating.setMarker(marker);
+
+        int mutedColor = Color.parseColor("#64748B");
+        int gridColor = Color.parseColor("#1A334E68");
+
+        // X-Axis
+        XAxis xAxis = binding.chartRating.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(mutedColor);
+        xAxis.setTextSize(9.5f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setAxisLineColor(gridColor);
+        xAxis.setGranularity(1f);
+        xAxis.setYOffset(2f);
+
+        // Left Y-Axis
+        YAxis leftAxis = binding.chartRating.getAxisLeft();
+        leftAxis.setTextColor(mutedColor);
+        leftAxis.setTextSize(9.5f);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(gridColor);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setXOffset(6f);
+        int padding = Math.max(30, (maxRating - minRating) / 8);
+        leftAxis.setAxisMinimum(Math.max(0, minRating - padding));
+        leftAxis.setAxisMaximum(maxRating + padding);
+
+        // Right Y-Axis
         binding.chartRating.getAxisRight().setEnabled(false);
-        binding.chartRating.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        binding.chartRating.getXAxis().setTextColor(Color.parseColor("#A0A0A0"));
-        binding.chartRating.getAxisLeft().setTextColor(Color.parseColor("#A0A0A0"));
+
+        // Smooth entry animation
+        binding.chartRating.animateX(700);
         binding.chartRating.invalidate();
     }
 
@@ -462,17 +595,23 @@ public class HomeFragment extends Fragment {
         if (!hrHandle.isEmpty()) {
             fetchHackerRankSolvedCount(hrHandle);
         }
+        String csesHandle = prefsRepo.getCsesHandle();
+        if (!csesHandle.isEmpty()) {
+            fetchCsesSolvedCount(csesHandle);
+        }
 
         int lcCount = prefsRepo.getLeetCodeSolvedCount();
         int ccCount = prefsRepo.getCodeChefSolvedCount();
         int acCount = prefsRepo.getAtCoderSolvedCount();
         int hrCount = prefsRepo.getHackerRankSolvedCount();
+        int csesCount = prefsRepo.getCsesSolvedCount();
         requireActivity().runOnUiThread(() -> {
             if (isAdded()) {
                 updatePlatformPillDisplay(lcHandle, lcCount, binding.tvHomeLeetCode);
                 updatePlatformPillDisplay(ccHandle, ccCount, binding.tvHomeCodeChef);
                 updatePlatformPillDisplay(acHandle, acCount, binding.tvHomeAtCoder);
                 updatePlatformPillDisplay(hrHandle, hrCount, binding.tvHomeHackerRank);
+                updatePlatformPillDisplay(csesHandle, csesCount, binding.tvHomeCses);
             }
         });
 
@@ -760,6 +899,58 @@ public class HomeFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }).start();
+    }
+
+    private void fetchCsesSolvedCount(String handle) {
+        new Thread(() -> {
+            CatalogRepository catalogRepo = new CatalogRepository(requireContext());
+            List<CatalogItem> csesItems = catalogRepo.getCsesCatalogItems();
+            int inAppSolved = 0;
+            if (csesItems != null) {
+                for (CatalogItem item : csesItems) {
+                    if (item.isRead()) {
+                        inAppSolved++;
+                    }
+                }
+            }
+
+            int remoteCount = 0;
+            // Only query remote if user entered a purely numeric user ID (e.g. "12345"),
+            // not an alphanumeric username like "MontasirJoy03" where stripping letters leaves "03" (user #3)
+            String trimmed = handle != null ? handle.trim() : "";
+            if (trimmed.matches("^\\d+$")) {
+                try {
+                    URL url = new URL("https://cses.fi/user/" + trimmed);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                    conn.setConnectTimeout(8000);
+                    conn.setReadTimeout(8000);
+                    if (conn.getResponseCode() == 200) {
+                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = in.readLine()) != null) {
+                            sb.append(line).append("\n");
+                        }
+                        in.close();
+                        String html = sb.toString();
+                        Matcher m = Pattern.compile("Submission count:</td><td >(\\d+)").matcher(html);
+                        if (m.find()) {
+                            remoteCount = Integer.parseInt(m.group(1));
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            final int finalSolved = remoteCount > 0 ? remoteCount : inAppSolved;
+            prefsRepo.saveCsesSolvedCount(finalSolved);
+            requireActivity().runOnUiThread(() -> {
+                if (isAdded()) {
+                    updatePlatformPillDisplay(handle, finalSolved, binding.tvHomeCses);
+                }
+            });
         }).start();
     }
 

@@ -37,11 +37,36 @@ public class UserPreferencesRepository {
     public static final String KEY_HANDLE_CODECHEF = "user_handle_codechef";
     public static final String KEY_HANDLE_ATCODER = "user_handle_atcoder";
     public static final String KEY_HANDLE_HACKERRANK = "user_handle_hackerrank";
+    public static final String KEY_HANDLE_CSES = "user_handle_cses";
     public static final String KEY_CF_SOLVED_COUNT = "cf_solved_count";
     public static final String KEY_LC_SOLVED_COUNT = "lc_solved_count";
     public static final String KEY_CC_SOLVED_COUNT = "cc_solved_count";
     public static final String KEY_ATCODER_SOLVED_COUNT = "atcoder_solved_count";
     public static final String KEY_HR_SOLVED_COUNT = "hr_solved_count";
+    public static final String KEY_CSES_SOLVED_COUNT = "cses_solved_count";
+    public static final String KEY_CSES_SOLVED_IDS = "cses_solved_ids";
+
+    // Returns the saved set of solved CSES problem IDs (as strings)
+    public Set<String> getCsesSolvedIds() {
+        return getPrefs().getStringSet(KEY_CSES_SOLVED_IDS, Collections.emptySet());
+    }
+
+    // Persist the solved IDs set (overwrites previous)
+    public void setCsesSolvedIds(Set<String> ids) {
+        if (ids == null) return;
+        getPrefs().edit().putStringSet(KEY_CSES_SOLVED_IDS, new HashSet<>(ids)).apply();
+        requestBackup();
+    }
+    public static final String KEY_READER_DARK_THEME = "reader_dark_theme";
+
+    public boolean isReaderDarkTheme() {
+        return getPrefs().getBoolean(KEY_READER_DARK_THEME, true);
+    }
+
+    public void setReaderDarkTheme(boolean dark) {
+        getPrefs().edit().putBoolean(KEY_READER_DARK_THEME, dark).apply();
+    }
+
     public static final String KEY_NOTIFICATIONS_ENABLED = "notifications_enabled";
     public static final String KEY_MILESTONE_ALERTS = "milestone_alerts_enabled";
     public static final String KEY_FAST_REVIEW_DEBUG = "fast_review_debug_mode";
@@ -57,6 +82,7 @@ public class UserPreferencesRepository {
     public static final String KEY_CACHED_UPCOMING_CONTESTS = "cached_upcoming_contests_json";
     public static final String KEY_DAILY_TARGET = "daily_upsolve_target";
     public static final String KEY_USER_RATING = "user_cf_rating";
+    public static final String KEY_CACHED_RATING_HISTORY = "cached_rating_history";
     public static final String KEY_USER_SOLVED_PROBLEM_KEYS = "user_solved_problem_keys";
 
     private final Context context;
@@ -68,6 +94,7 @@ public class UserPreferencesRepository {
     private final MutableLiveData<String> codechefHandleLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> atcoderHandleLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> hackerrankHandleLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> csesHandleLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> themeLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> notificationsEnabledLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> milestoneAlertsLiveData = new MutableLiveData<>();
@@ -128,6 +155,7 @@ public class UserPreferencesRepository {
                 editor.putString(KEY_HANDLE_CODECHEF, source.getString(KEY_HANDLE_CODECHEF, ""));
                 editor.putString(KEY_HANDLE_ATCODER, source.getString(KEY_HANDLE_ATCODER, ""));
                 editor.putString(KEY_HANDLE_HACKERRANK, source.getString(KEY_HANDLE_HACKERRANK, ""));
+                editor.putString(KEY_HANDLE_CSES, source.getString(KEY_HANDLE_CSES, ""));
                 editor.putInt(KEY_USER_RATING, source.getInt(KEY_USER_RATING, 0));
                 Set<String> blogs = source.getStringSet(KEY_READ_BLOGS, null);
                 if (blogs != null) editor.putStringSet(KEY_READ_BLOGS, new HashSet<>(blogs));
@@ -145,6 +173,7 @@ public class UserPreferencesRepository {
         codechefHandleLiveData.postValue(getCodeChefHandle());
         atcoderHandleLiveData.postValue(getAtCoderHandle());
         hackerrankHandleLiveData.postValue(getHackerRankHandle());
+        csesHandleLiveData.postValue(getCsesHandle());
         themeLiveData.postValue(getTheme());
         notificationsEnabledLiveData.postValue(isNotificationsEnabled());
         milestoneAlertsLiveData.postValue(isMilestoneAlertsEnabled());
@@ -219,6 +248,19 @@ public class UserPreferencesRepository {
         return hackerrankHandleLiveData;
     }
 
+    public String getCsesHandle() {
+        return getPrefs().getString(KEY_HANDLE_CSES, "");
+    }
+
+    public void saveCsesHandle(String handle) {
+        getPrefs().edit().putString(KEY_HANDLE_CSES, handle != null ? handle.trim() : "").apply();
+        requestBackup();
+    }
+
+    public LiveData<String> getCsesHandleLiveData() {
+        return csesHandleLiveData;
+    }
+
     // ----- Solve counts -----
     public int getLeetCodeSolvedCount() {
         return getPrefs().getInt(KEY_LC_SOLVED_COUNT, 0);
@@ -253,6 +295,15 @@ public class UserPreferencesRepository {
 
     public void saveHackerRankSolvedCount(int count) {
         getPrefs().edit().putInt(KEY_HR_SOLVED_COUNT, count).apply();
+        requestBackup();
+    }
+
+    public int getCsesSolvedCount() {
+        return getPrefs().getInt(KEY_CSES_SOLVED_COUNT, 0);
+    }
+
+    public void saveCsesSolvedCount(int count) {
+        getPrefs().edit().putInt(KEY_CSES_SOLVED_COUNT, count).apply();
         requestBackup();
     }
 
@@ -480,5 +531,13 @@ public class UserPreferencesRepository {
 
     public void setContestReminderSet(long contestId, boolean isSet) {
         getPrefs().edit().putBoolean("contest_reminder_" + contestId, isSet).apply();
+    }
+
+    public String getCachedRatingHistoryJson() {
+        return getPrefs().getString(KEY_CACHED_RATING_HISTORY, "");
+    }
+
+    public void setCachedRatingHistoryJson(String json) {
+        getPrefs().edit().putString(KEY_CACHED_RATING_HISTORY, json).apply();
     }
 }
